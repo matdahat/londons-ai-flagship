@@ -7,25 +7,37 @@
 
   var doc = document.documentElement;
 
-  /* ————— film mode: scrub on fine pointers, stacked loops on touch-only/small ————— */
+  /* ————— film mode: scrub everywhere; stacked loops only for prefers-reduced-motion —————
+     Scroll-scrubbing is scrollY-driven, not gesture-driven, so it works the same on touch
+     as on a wheel/trackpad — the only real mobile cost is data, handled below with a
+     lighter frame tier, not by falling back to a different UI. */
   var touchOnly = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
   function viewportW() {
     return window.innerWidth || doc.clientWidth || window.screen.width || 0;
   }
-  var loopsMode = touchOnly || (viewportW() > 0 && viewportW() < 901);
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var loopsMode = reducedMotion;
   if (loopsMode) doc.classList.add('film-loops');
 
+  /* asset tier: narrow viewports get a smaller, lighter frame sequence so scrubbing
+     on mobile doesn't mean downloading dozens of full-res stills over cellular */
+  var MOBILE_BREAKPOINT = 901;
+  var isMobileTier = viewportW() > 0 && viewportW() < MOBILE_BREAKPOINT;
+  var FRAMES_DIR = isMobileTier ? 'assets/frames-mobile/' : 'assets/frames/';
+
   window.addEventListener('resize', function () {
-    var w = viewportW();
-    var want = touchOnly || (w > 0 && w < 901);
-    if (want !== loopsMode) window.location.reload();
+    if (loopsMode) return; /* reduced-motion mode doesn't depend on width */
+    var wantMobileTier = viewportW() > 0 && viewportW() < MOBILE_BREAKPOINT;
+    if (wantMobileTier !== isMobileTier) window.location.reload();
   });
 
   /* ————— smooth scroll ————— */
   var lenis = null;
-  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var noLenis = /[?&]nolenis/.test(window.location.search);
-  if (!loopsMode && !reducedMotion && !noLenis && window.Lenis) {
+  /* skip Lenis on touch: it virtualizes scroll input, which can fight native touch
+     momentum/rubber-banding — desktop wheel/trackpad gets the smoothing, touch gets
+     native feel, both drive the same always-running redraw loop below */
+  if (!loopsMode && !touchOnly && !noLenis && window.Lenis) {
     lenis = new Lenis({ lerp: 0.09, wheelMultiplier: 1.0 });
   }
 
@@ -72,14 +84,18 @@
      scroll-fractions once the manifest loads (applyRefinedBoundaries below),
      since clip durations vary slightly and this keeps text/zone timing
      locked to the actual footage rather than the vh guess. */
+  /* fade in/out windows are deliberately near-sequential (tiny overlap, not a
+     broad crossfade) — two different paragraphs of text superimposed at 50%
+     opacity each reads as ghosting, not a blend, so the outgoing line finishes
+     fading before the incoming one starts rather than overlapping through it */
   var COPY = [
-    [document.getElementById('copy-hero'), -1, 0, c1End - 0.04, c1End + 0.02],
-    [document.getElementById('copy-z2'), c1End - 0.03, c1End + 0.03, c2End - 0.04, c2End + 0.02],
-    [document.getElementById('copy-z3'), c2End - 0.03, c2End + 0.03, c3End - 0.04, c3End + 0.02],
-    [document.getElementById('copy-z4'), c3End - 0.03, c3End + 0.03, c4End - 0.05, c4End - 0.01],
-    [document.getElementById('copy-z5'), pauseEnd - 0.02, pauseEnd + 0.04, c5End - 0.04, c5End + 0.02]
+    [document.getElementById('copy-hero'), -1, 0, c1End - 0.045, c1End - 0.005],
+    [document.getElementById('copy-z2'), c1End - 0.005, c1End + 0.035, c2End - 0.045, c2End - 0.005],
+    [document.getElementById('copy-z3'), c2End - 0.005, c2End + 0.035, c3End - 0.045, c3End - 0.005],
+    [document.getElementById('copy-z4'), c3End - 0.005, c3End + 0.035, c4End - 0.045, c4End - 0.005],
+    [document.getElementById('copy-z5'), pauseEnd - 0.005, pauseEnd + 0.035, c5End - 0.045, c5End - 0.005]
   ];
-  var WARNING_FADE = [c4End - 0.02, c4End + 0.03, pauseEnd - 0.03, pauseEnd + 0.02];
+  var WARNING_FADE = [c4End - 0.005, c4End + 0.035, pauseEnd - 0.045, pauseEnd - 0.005];
   /* zone-label boundaries (scroll fraction where the eyebrow switches) — same refinement */
   var ZONE_BOUNDS = [c1End, c2End, c3End, pauseEnd];
 
@@ -93,14 +109,14 @@
     var tail = 1 - f4;
     var b5 = tail > 0 ? pauseEnd + ((zones[4] - f4) / tail) * (1 - pauseEnd) : c5End;
 
-    COPY[0][3] = b1 - 0.04; COPY[0][4] = b1 + 0.02;
-    COPY[1][1] = b1 - 0.03; COPY[1][2] = b1 + 0.03; COPY[1][3] = b2 - 0.04; COPY[1][4] = b2 + 0.02;
-    COPY[2][1] = b2 - 0.03; COPY[2][2] = b2 + 0.03; COPY[2][3] = b3 - 0.04; COPY[2][4] = b3 + 0.02;
-    COPY[3][1] = b3 - 0.03; COPY[3][2] = b3 + 0.03; COPY[3][3] = b4 - 0.05; COPY[3][4] = b4 - 0.01;
-    COPY[4][1] = pauseEnd - 0.02; COPY[4][2] = pauseEnd + 0.04; COPY[4][3] = b5 - 0.04; COPY[4][4] = b5 + 0.02;
+    COPY[0][3] = b1 - 0.045; COPY[0][4] = b1 - 0.005;
+    COPY[1][1] = b1 - 0.005; COPY[1][2] = b1 + 0.035; COPY[1][3] = b2 - 0.045; COPY[1][4] = b2 - 0.005;
+    COPY[2][1] = b2 - 0.005; COPY[2][2] = b2 + 0.035; COPY[2][3] = b3 - 0.045; COPY[2][4] = b3 - 0.005;
+    COPY[3][1] = b3 - 0.005; COPY[3][2] = b3 + 0.035; COPY[3][3] = b4 - 0.045; COPY[3][4] = b4 - 0.005;
+    COPY[4][1] = pauseEnd - 0.005; COPY[4][2] = pauseEnd + 0.035; COPY[4][3] = b5 - 0.045; COPY[4][4] = b5 - 0.005;
 
-    WARNING_FADE[0] = b4 - 0.02; WARNING_FADE[1] = b4 + 0.03;
-    WARNING_FADE[2] = pauseEnd - 0.03; WARNING_FADE[3] = pauseEnd + 0.02;
+    WARNING_FADE[0] = b4 - 0.005; WARNING_FADE[1] = b4 + 0.035;
+    WARNING_FADE[2] = pauseEnd - 0.045; WARNING_FADE[3] = pauseEnd - 0.005;
 
     ZONE_BOUNDS[0] = b1; ZONE_BOUNDS[1] = b2; ZONE_BOUNDS[2] = b3; ZONE_BOUNDS[3] = pauseEnd;
   }
@@ -118,13 +134,15 @@
   function framePath(i) {
     var n = String(i + 1);
     while (n.length < framePad) n = '0' + n;
-    return 'assets/frames/f-' + n + frameExt;
+    return FRAMES_DIR + 'f-' + n + frameExt;
   }
 
-  var LATTICE = 8;
-  var WINDOW = 28;
+  /* lighter sliding window on mobile: smaller screens, less RAM/GPU headroom,
+     and a cellular connection means fewer frames in flight and held in memory */
+  var LATTICE = isMobileTier ? 10 : 8;
+  var WINDOW = isMobileTier ? 16 : 28;
   var inFlightCount = 0;
-  var MAX_INFLIGHT = 4;
+  var MAX_INFLIGHT = isMobileTier ? 3 : 4;
 
   function isLattice(i) { return i % LATTICE === 0 || i === frameCount - 1; }
 
@@ -383,7 +401,7 @@
   }
 
   if (!loopsMode) {
-    fetch('assets/frames/manifest.json')
+    fetch(FRAMES_DIR + 'manifest.json')
       .then(function (r) { return r.json(); })
       .then(function (m) {
         frameCount = m.count;

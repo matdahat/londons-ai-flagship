@@ -117,16 +117,17 @@ body { overflow-x: hidden; }
 }
 /* the lockup IS the hero: display-grade mark + wordmark, flush-left */
 .hero-lockup {
-  display: inline-flex; align-items: center;
+  display: inline-flex; align-items: center; flex-wrap: wrap;
   gap: clamp(var(--space-3), 1.6vw, var(--space-8));
   margin-bottom: 0;
 }
 .hero-lockup .mark {
-  height: clamp(46px, 7.2vw, 118px); width: auto; color: var(--color-bg);
+  height: clamp(32px, 7.2vw, 118px); width: auto; color: var(--color-bg);
 }
 .hero-lockup .word {
   font-family: var(--font-heading); font-weight: var(--font-heading-weight);
-  font-size: clamp(64px, 10vw, 164px); letter-spacing: -0.02em; line-height: 1;
+  font-size: clamp(40px, 10vw, 164px); letter-spacing: -0.02em; line-height: 1;
+  min-width: 0; /* let a flex item actually shrink/wrap instead of overflowing */
 }
 .hero-lockup .word .ai { color: var(--color-accent); }
 .scroll-cue {
