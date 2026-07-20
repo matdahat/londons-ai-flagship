@@ -8,7 +8,8 @@ FILM="$(cd "$(dirname "$0")/../assets/film" && pwd)"
 FRAMES="$(cd "$(dirname "$0")/../assets/frames" && pwd)"
 
 FPS=8               # frames per second of the scrub sequence
-W=1280              # frame width (16:9 -> 720 high)
+W=1920              # frame width (16:9 -> 1080 high) — matches source resolution,
+                    # avoids the desktop canvas upscaling a smaller frame
 QUALITY=10          # mjpeg -q:v (2 best .. 31 worst)
 N=6                 # number of clips
 
