@@ -1,0 +1,12 @@
+node_modules/
+.DS_Store
+.claude/settings.local.json
+
+# Seedance source clips, graded intermediates, and the concatenated master —
+# not served by the site (index.html only uses assets/frames/ and the
+# clip-N-loop.mp4 mobile loops). Kept locally for provenance/rebuilds via
+# tools/process-film.sh; excluded here to keep the public repo lean.
+assets/film/clip-[1-6].mp4
+assets/film/graded-*.mp4
+assets/film/descent.mp4
+assets/film/clip-*-last.jpg

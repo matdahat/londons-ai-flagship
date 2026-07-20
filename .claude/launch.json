@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "londons-ai-flagship",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["/Users/mathewmeyers/Documents/londons.ai site builds/the flagship/tools/serve.js"],
+      "port": 4175
+    }
+  ]
+}

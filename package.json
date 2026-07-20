@@ -1,0 +1,17 @@
+{
+  "name": "londons.ai---flagship",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "lenis": "^1.3.25",
+    "puppeteer-core": "^25.3.0"
+  }
+}
