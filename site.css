@@ -173,14 +173,39 @@ body { overflow-x: hidden; }
   margin-top: var(--space-6); max-width: 30ch;
 }
 
-/* ————————————————————— the descent (mobile loops) ————————————————————— */
+/* ————————————————————— the descent (mobile story chapters) —————————————————————
+   No scroll-scrub on touch — tried it, it doesn't feel right on a phone. Instead:
+   six full-bleed video chapters that snap crisply into place one at a time, each
+   with its own pinned bottom-scrim copy, same visual language as the desktop hero
+   (film behind, text pinned over a dark gradient) just delivered per-chapter
+   instead of continuously scrubbed. */
 
+html.film-loops { scroll-snap-type: y mandatory; }
 .descent-mobile { display: none; }
-.descent-mobile .m-zone { position: relative; background: var(--color-text); }
-.descent-mobile video { width: 100%; height: auto; display: block; }
+.descent-mobile .m-zone {
+  position: relative;
+  height: 100vh; height: 100svh; /* svh accounts for mobile browser chrome, vh is the fallback */
+  overflow: hidden;
+  background: var(--color-text);
+  scroll-snap-align: start; scroll-snap-stop: always;
+}
+.descent-mobile video {
+  position: absolute; inset: 0; z-index: 0;
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+/* one scrim per chapter — dark at top (nav legibility) and bottom (copy legibility),
+   clear through the middle so the film still reads, same shape as the desktop scrim */
+.descent-mobile .m-zone::after {
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--color-text) 50%, transparent) 0%,
+    transparent 24%, transparent 55%,
+    color-mix(in srgb, var(--color-text) 90%, transparent) 100%);
+}
 .descent-mobile .m-copy {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
   padding: var(--space-6) var(--gutter) calc(var(--space-8) * 1.5);
-  color: var(--color-bg); background: var(--color-text);
+  color: var(--color-bg);
 }
 .descent-mobile .m-copy .display-2 { font-size: clamp(28px, 8vw, 44px); }
 .descent-mobile .m-kicker {
@@ -191,7 +216,10 @@ body { overflow-x: hidden; }
 }
 .descent-mobile .m-kicker .zl-rule { width: 28px; height: 2px; background: var(--color-accent); }
 .descent-mobile .m-copy .zc-sub { margin-top: var(--space-3); color: var(--ground-70); font-size: 15px; }
-.descent-mobile .m-zone--hero .m-copy { padding-top: var(--space-8); }
+.descent-mobile .m-zone--hero .m-copy {
+  top: 0; bottom: auto; display: flex; flex-direction: column; justify-content: flex-end;
+  padding-top: calc(var(--space-8) * 2);
+}
 .descent-mobile .hero-lockup { gap: var(--space-3); }
 .descent-mobile .hero-lockup .mark { height: clamp(30px, 8.5vw, 54px); }
 .descent-mobile .hero-lockup .word { font-size: clamp(42px, 11.8vw, 76px); }
@@ -199,10 +227,14 @@ body { overflow-x: hidden; }
   font-size: clamp(18px, 5vw, 26px); margin-top: var(--space-4);
   color: var(--ground-70);
 }
-/* THE WARNING, mobile — a plain light-ground block between clip 4 and clip 5 */
+/* THE WARNING, mobile — its own full-height light-ground chapter, same snap rhythm */
 .descent-mobile .m-warning {
+  position: relative;
+  min-height: 100vh; min-height: 100svh;
+  display: flex; flex-direction: column; justify-content: center;
   background: var(--color-bg); color: var(--color-text);
   padding: calc(var(--space-8) * 1.5) var(--gutter);
+  scroll-snap-align: start; scroll-snap-stop: always;
 }
 .descent-mobile .m-warning h2 { font-size: clamp(28px, 8vw, 40px); max-width: 14ch; margin: 0 0 var(--space-4); }
 .descent-mobile .m-warning p { font-size: 15px; line-height: 1.6; max-width: 44ch; margin: 0 0 var(--space-3); color: color-mix(in srgb, var(--color-text) 78%, transparent); }

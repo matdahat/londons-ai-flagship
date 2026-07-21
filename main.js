@@ -7,28 +7,25 @@
 
   var doc = document.documentElement;
 
-  /* ————— film mode: scrub everywhere; stacked loops only for prefers-reduced-motion —————
-     Scroll-scrubbing is scrollY-driven, not gesture-driven, so it works the same on touch
-     as on a wheel/trackpad — the only real mobile cost is data, handled below with a
-     lighter frame tier, not by falling back to a different UI. */
+  /* ————— film mode: scroll-scrub on desktop, snap-through story chapters on touch/small —————
+     Tried scroll-scrubbing on touch too (it's scrollY-driven, not gesture-driven, so it
+     technically works) — real-device testing showed it just doesn't feel right on a phone,
+     so touch/narrow viewports get a dedicated chapter format instead: full-bleed video per
+     clip, CSS scroll-snap between them, no frame-sequence downloading at all. */
   var touchOnly = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
   function viewportW() {
     return window.innerWidth || doc.clientWidth || window.screen.width || 0;
   }
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var loopsMode = reducedMotion;
+  var MOBILE_BREAKPOINT = 901;
+  function wantsLoopsMode() {
+    return reducedMotion || touchOnly || (viewportW() > 0 && viewportW() < MOBILE_BREAKPOINT);
+  }
+  var loopsMode = wantsLoopsMode();
   if (loopsMode) doc.classList.add('film-loops');
 
-  /* asset tier: narrow viewports get a smaller, lighter frame sequence so scrubbing
-     on mobile doesn't mean downloading dozens of full-res stills over cellular */
-  var MOBILE_BREAKPOINT = 901;
-  var isMobileTier = viewportW() > 0 && viewportW() < MOBILE_BREAKPOINT;
-  var FRAMES_DIR = isMobileTier ? 'assets/frames-mobile/' : 'assets/frames/';
-
   window.addEventListener('resize', function () {
-    if (loopsMode) return; /* reduced-motion mode doesn't depend on width */
-    var wantMobileTier = viewportW() > 0 && viewportW() < MOBILE_BREAKPOINT;
-    if (wantMobileTier !== isMobileTier) window.location.reload();
+    if (wantsLoopsMode() !== loopsMode) window.location.reload();
   });
 
   /* ————— smooth scroll ————— */
@@ -134,15 +131,13 @@
   function framePath(i) {
     var n = String(i + 1);
     while (n.length < framePad) n = '0' + n;
-    return FRAMES_DIR + 'f-' + n + frameExt;
+    return 'assets/frames/f-' + n + frameExt;
   }
 
-  /* lighter sliding window on mobile: smaller screens, less RAM/GPU headroom,
-     and a cellular connection means fewer frames in flight and held in memory */
-  var LATTICE = isMobileTier ? 10 : 8;
-  var WINDOW = isMobileTier ? 16 : 28;
+  var LATTICE = 8;
+  var WINDOW = 28;
   var inFlightCount = 0;
-  var MAX_INFLIGHT = isMobileTier ? 3 : 4;
+  var MAX_INFLIGHT = 4;
 
   function isLattice(i) { return i % LATTICE === 0 || i === frameCount - 1; }
 
@@ -401,7 +396,7 @@
   }
 
   if (!loopsMode) {
-    fetch(FRAMES_DIR + 'manifest.json')
+    fetch('assets/frames/manifest.json')
       .then(function (r) { return r.json(); })
       .then(function (m) {
         frameCount = m.count;
