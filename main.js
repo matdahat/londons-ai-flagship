@@ -54,7 +54,7 @@
 
   var ZONES = [
     { index: '01', name: 'The City' },
-    { index: '02', name: 'The Building' },
+    { index: '02', name: 'The Machine' },
     { index: '03', name: 'The Studio' },
     { index: '04', name: 'The Floor' },
     { index: '05', name: 'The Convergence' }

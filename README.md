@@ -1,73 +1,74 @@
 # Londons.ai — the flagship
 
-One-page site for Londons.ai. Scrolling down is a single unbroken descent:
-THE CITY → THE BUILDING → THE STUDIO → THE FLOOR → (THE WARNING, a light-ground
-pause) → THE CONVERGENCE → THE HOLD, told through a six-clip black-and-white
-film scrubbed as a canvas frame sequence, then a set of light-ground sections
-proving the offer runs across every part of a business, not just fashion.
+The Londons.ai site, deployed to **https://londons.ai** via GitHub Pages
+(`matdahat/londons-ai-flagship`, custom domain + enforced HTTPS).
 
-## Run
+Scrolling down is a single unbroken descent:
+`THE CITY → THE MACHINE → THE STUDIO → THE FLOOR → (THE WARNING) → THE CONVERGENCE`
+told through six chained black-and-white clips scrubbed as a canvas frame
+sequence, followed by light-ground sections proving the offer runs across every
+part of a business, not just fashion.
+
+## Run locally
 
 ```
 node tools/serve.js        # http://localhost:4175
 ```
 
-(Any static server works; `tools/serve.js` adds no-store headers for dev.)
+Sibling builds in the parent folder use their own ports: `4173` london skyline,
+`4174` model shoot, `4176` the flagship mk2 (the staging copy this build came
+from — kept so future changes can be trialled before going live).
 
 ## Structure
 
-- `index.html` — the page. Everyone gets the scroll-scrub descent — it's
-  scrollY-driven, not gesture-driven, so it works the same on touch as on a
-  wheel/trackpad. `prefers-reduced-motion` users get stacked autoplaying
-  loops instead (`html.film-loops`), with THE WARNING as a plain in-flow
-  light-ground block between clip 4 and clip 5.
-- `styles.css` — the brand design-system tokens, copied verbatim from the
-  brand bundle (source of truth for every colour/font/spacing value).
+- `index.html` — the page. Desktop gets the scroll-scrub descent; touch and
+  narrow viewports get full-bleed snap-scrolling story chapters instead
+  (`html.film-loops`), because scroll-scrubbing tested badly on a real phone.
+  `prefers-reduced-motion` gets the same chapter treatment.
+- `styles.css` — brand design-system tokens, verbatim from the brand bundle.
 - `site.css` — site layer composed from those tokens only.
-- `main.js` — Lenis smooth scroll on non-touch pointers (skipped on touch so
-  native momentum/rubber-banding isn't fought by virtualized scroll — the
-  redraw loop runs regardless, reading `scrollY` fresh every frame either
-  way), canvas frame-sequence scrubber, and the piecewise scroll→frame
-  mapping that holds the film on clip 4's last frame for the duration of THE
-  WARNING before resuming into clip 5 — so the pause reads as a beat inside
-  one continuous journey, not a cut. Zone label/copy fades are near-sequential
-  (tiny overlap, not a broad crossfade) — two different paragraphs
-  superimposed at partial opacity reads as ghosting, not a blend. Zone
-  label/copy timing, reveals, counters.
-- `assets/frames/` — desktop frame sequence @ 1920×1080, 8fps, +
-  `manifest.json` (built artifact; the manifest carries the real
-  clip-boundary fractions used by the frame-hold math and the zone label).
-- `assets/frames-mobile/` — the same sequence at 960×540 for viewports under
-  901px, so scrubbing on a phone doesn't mean pulling full-res stills over
-  cellular. Same manifest shape, regenerated from the same `descent.mp4` —
-  no reference to the frame width is baked in anywhere else.
-- `assets/film/` — source clips from Seedance 2.0 (`clip-1..6.mp4`), the
-  graded intermediates, the concatenated `descent.mp4`, the two seed
-  references (`hero-aerial.png`, `cast-ensemble.png`), and compressed loops
-  (`clip-N-loop.mp4`) used only by the reduced-motion fallback.
-- `tools/process-film.sh` — rebuilds grade → concat → frames (desktop tier)
-  → loops from `clip-1..6.mp4`. Re-run the frame-extraction step alone
-  (see the script's step 3) at a different `W` to regenerate either tier
-  from the existing `descent.mp4` without new generation.
-- `tools/verify.js` — headless Chrome check: zone labels/copy at scroll
-  positions, the warning pause, poster close, mobile loops.
-  `node tools/verify.js /tmp/out`.
+- `main.js` — Lenis smooth scroll on non-touch pointers, canvas frame-sequence
+  scrubber, and the piecewise scroll→frame mapping that holds the film on clip
+  4's last frame for the duration of THE WARNING before resuming into clip 5 —
+  so the pause reads as a beat inside one continuous journey, not a cut.
+  Copy fades are near-sequential rather than a broad crossfade: two paragraphs
+  superimposed at partial opacity reads as ghosting, not a blend.
+- `assets/frames/` — 1920×1080 frame sequence @ 8fps + `manifest.json`, whose
+  real clip-boundary fractions drive both the frame-hold maths and the zone
+  label.
+- `assets/film/` — the six mobile loops actually served, plus `cast-b.png`, the
+  locked cast reference. The 4K masters, graded intermediates and
+  `descent.mp4` are gitignored: they are build inputs, not site assets, and
+  live in `the flagship mk2/assets/film/` locally.
+- `tools/process-film.sh` — grade → concat → frames → loops from `clip-1..6.mp4`.
+- `tools/verify.js` — headless Chrome check of zone labels, copy positions,
+  the warning pause, poster close and mobile chapters.
 
-## Film provenance
+## The film
 
-Generated with Seedance 2.0 (Higgsfield MCP), std / 1080p / 16:9 / silent.
-One hero aerial (B&W, Tower Bridge + Thames) and one five-model ensemble cast
-(B&W, black-void studio, five distinct clothing genres) seed the whole chain
-as image references; each clip's final frame is the next clip's
-`start_image`, so all six clips join as one unbroken move — camera movement
-only, no jump cuts, no cross-dissolves. All film is pure high-contrast B&W —
-the only red on the site lives in the interface.
+Seedance 2.0 via Higgsfield MCP, **4k / std / high bitrate / 16:9 / silent**.
+Each clip's final frame becomes the next clip's `start_image`, and the cast
+plate is passed as `image_references` on the clips the models appear in — so
+the six clips join as one unbroken camera move with no jump cuts, and the same
+three models recur throughout.
 
-## The scroll-time pause
+Source is 4K but the site ships frames at 1920px: rendered-high/delivered-low,
+which buys cleaner detail through supersampling rather than a 4K viewing
+experience. `bitrate_mode: high` costs nothing extra at any tier, so it is
+always on.
 
-THE WARNING is the one moment the descent stops moving forward as film, so
-the urgency line can be read on a plain ground. It is not a jump cut in the
-footage: `main.js` maps scroll progress to frame progress piecewise — linear
-through clips 1–4, held flat across the pause's scroll distance, then linear
-again from clip 5's first frame to clip 6's last. Zone label and progress
-rule stay live throughout, since the underlying journey never actually stops.
+The cast is three models — one man, two women, mid-twenties, contemporary
+wearable fashion — introduced in the studio in front of the camera and crew.
+THE MACHINE (zone 02) dives through a window into an open laptop and on into
+macro circuitry, which states what the company does within the first fifteen
+seconds and holds far more perceived sharpness than a wide aerial, where a
+whole city of fine detail competes for pixels.
+
+All film is pure high-contrast B&W; the only red on the site is in the
+interface.
+
+## Deploying
+
+`git push` to `main` — GitHub Pages rebuilds automatically. To roll back to the
+previous five-model build: `git revert <deploy commit>` or reset to
+`33c35d4`.
