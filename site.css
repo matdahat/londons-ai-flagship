@@ -140,12 +140,43 @@ body { overflow-x: hidden; }
 /* legibility scrim behind pinned lines — ink, never a colour */
 .film-scrim {
   position: fixed; inset: 0; z-index: 10; pointer-events: none;
-  background: linear-gradient(180deg,
-    color-mix(in srgb, var(--color-text) 42%, transparent) 0%,
-    transparent 34%,
-    transparent 58%,
-    color-mix(in srgb, var(--color-text) 48%, transparent) 100%);
+  /* Two layers, shaped around where the copy actually sits. The pinned
+     .zone-copy lines are vertically centred and the hero sits low, so a
+     gradient that goes transparent through the middle (as this once did)
+     leaves the feature text with nothing behind it on bright frames.
+     Every line is also flush-left, so the second layer darkens the left
+     column only — protecting the text without muddying the right half of
+     the frame, which is where the film still needs to read. */
+  background:
+    linear-gradient(90deg,
+      color-mix(in srgb, var(--color-text) 34%, transparent) 0%,
+      color-mix(in srgb, var(--color-text) 18%, transparent) 30%,
+      transparent 58%),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--color-text) 46%, transparent) 0%,
+      color-mix(in srgb, var(--color-text) 10%, transparent) 22%,
+      color-mix(in srgb, var(--color-text) 26%, transparent) 40%,
+      color-mix(in srgb, var(--color-text) 30%, transparent) 52%,
+      color-mix(in srgb, var(--color-text) 22%, transparent) 66%,
+      color-mix(in srgb, var(--color-text) 68%, transparent) 100%);
   opacity: 0; transition: opacity 0.4s;
+}
+
+/* Edge definition for white type over film — a wide, low-opacity ink halo
+   rather than a drop shadow, so it separates the letterforms from a busy
+   frame without reading as a bevel. */
+.zone-copy .display-1,
+.zone-copy .display-2,
+.zone-copy .zc-sub,
+.zone-copy .scroll-cue,
+.zone-copy .hero-lockup .word,
+.zone-label {
+  text-shadow:
+    0 2px 44px color-mix(in srgb, var(--color-text) 60%, transparent),
+    0 1px 5px color-mix(in srgb, var(--color-text) 40%, transparent);
+}
+.zone-copy .hero-lockup .mark {
+  filter: drop-shadow(0 2px 24px color-mix(in srgb, var(--color-text) 55%, transparent));
 }
 .film-scrim.live { opacity: 1; }
 
