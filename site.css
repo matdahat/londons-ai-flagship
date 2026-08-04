@@ -92,7 +92,12 @@ body { overflow-x: hidden; }
 }
 .film-canvas.parked { visibility: hidden; }
 
-#descent { position: relative; z-index: 1; }
+/* z-index 2 so the descent's copy paints ABOVE .film-scrim (z-index 1).
+   #descent creates a stacking context, so .zone-copy's z-index:20 only ranks
+   it inside here — with #descent below the scrim, the scrim's ink gradient
+   was painting straight over the feature text and greying it, which is why
+   the copy measured as full-strength white but never looked it. */
+#descent { position: relative; z-index: 2; }
 /* 990vh = 130+130+145+130 (clips 1-4) + 170 (THE WARNING pause) + 145+140 (clips 5-6) — see main.js SEG_VH */
 .descent-track { height: 990vh; position: relative; }
 
@@ -160,7 +165,9 @@ body { overflow-x: hidden; }
 
 /* legibility scrim behind pinned lines — ink, never a colour */
 .film-scrim {
-  position: fixed; inset: 0; z-index: 10; pointer-events: none;
+  /* z-index 1: above the film canvas (0), below the descent content (2).
+     It must darken the footage, never the type sitting on it. */
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
   /* Two layers, shaped around where the copy actually sits. The pinned
      .zone-copy lines are vertically centred and the hero sits low, so a
      gradient that goes transparent through the middle (as this once did)
