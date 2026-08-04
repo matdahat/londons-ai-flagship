@@ -69,6 +69,13 @@ interface.
 
 ## Deploying
 
-`git push` to `main` — GitHub Pages rebuilds automatically. To roll back to the
+Run `tools/stamp-assets.sh` first, then `git push` to `main` — GitHub Pages
+rebuilds automatically.
+
+**Always stamp before deploying.** `index.html` links `site.css?v=…` and
+`main.js?v=…`; if that version does not change, the asset URL does not change,
+and browsers keep serving the copy they already cached — the deploy goes live
+but looks like nothing happened until a manual hard refresh. The script writes
+a fresh timestamp into both links so the browser is obliged to refetch. To roll back to the
 previous five-model build: `git revert <deploy commit>` or reset to
 `33c35d4`.
