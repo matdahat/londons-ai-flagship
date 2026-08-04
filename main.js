@@ -84,14 +84,20 @@
      broad crossfade) — two different paragraphs of text superimposed at 50%
      opacity each reads as ghosting, not a blend, so the outgoing line finishes
      fading before the incoming one starts rather than overlapping through it */
+  /* Ramps are kept short so the plateau is long. With wide ramps the copy was
+     only at full opacity for ~45% of the time it was on screen and spent the
+     rest mid-fade, which reads as grey type rather than white — the mobile
+     chapters look brighter purely because their copy never fades at all.
+     Still strictly sequential (out ends where in begins) so two paragraphs
+     are never superimposed. */
   var COPY = [
-    [document.getElementById('copy-hero'), -1, 0, c1End - 0.045, c1End - 0.005],
-    [document.getElementById('copy-z2'), c1End - 0.005, c1End + 0.035, c2End - 0.045, c2End - 0.005],
-    [document.getElementById('copy-z3'), c2End - 0.005, c2End + 0.035, c3End - 0.045, c3End - 0.005],
-    [document.getElementById('copy-z4'), c3End - 0.005, c3End + 0.035, c4End - 0.045, c4End - 0.005],
-    [document.getElementById('copy-z5'), pauseEnd - 0.005, pauseEnd + 0.035, c5End - 0.045, c5End - 0.005]
+    [document.getElementById('copy-hero'), -1, 0, c1End - 0.020, c1End - 0.004],
+    [document.getElementById('copy-z2'), c1End - 0.004, c1End + 0.016, c2End - 0.020, c2End - 0.004],
+    [document.getElementById('copy-z3'), c2End - 0.004, c2End + 0.016, c3End - 0.020, c3End - 0.004],
+    [document.getElementById('copy-z4'), c3End - 0.004, c3End + 0.016, c4End - 0.020, c4End - 0.004],
+    [document.getElementById('copy-z5'), pauseEnd - 0.004, pauseEnd + 0.016, c5End - 0.020, c5End - 0.004]
   ];
-  var WARNING_FADE = [c4End - 0.005, c4End + 0.035, pauseEnd - 0.045, pauseEnd - 0.005];
+  var WARNING_FADE = [c4End - 0.004, c4End + 0.016, pauseEnd - 0.020, pauseEnd - 0.004];
   /* zone-label boundaries (scroll fraction where the eyebrow switches) — same refinement */
   var ZONE_BOUNDS = [c1End, c2End, c3End, pauseEnd];
 
@@ -105,14 +111,14 @@
     var tail = 1 - f4;
     var b5 = tail > 0 ? pauseEnd + ((zones[4] - f4) / tail) * (1 - pauseEnd) : c5End;
 
-    COPY[0][3] = b1 - 0.045; COPY[0][4] = b1 - 0.005;
-    COPY[1][1] = b1 - 0.005; COPY[1][2] = b1 + 0.035; COPY[1][3] = b2 - 0.045; COPY[1][4] = b2 - 0.005;
-    COPY[2][1] = b2 - 0.005; COPY[2][2] = b2 + 0.035; COPY[2][3] = b3 - 0.045; COPY[2][4] = b3 - 0.005;
-    COPY[3][1] = b3 - 0.005; COPY[3][2] = b3 + 0.035; COPY[3][3] = b4 - 0.045; COPY[3][4] = b4 - 0.005;
-    COPY[4][1] = pauseEnd - 0.005; COPY[4][2] = pauseEnd + 0.035; COPY[4][3] = b5 - 0.045; COPY[4][4] = b5 - 0.005;
+    COPY[0][3] = b1 - 0.020; COPY[0][4] = b1 - 0.004;
+    COPY[1][1] = b1 - 0.004; COPY[1][2] = b1 + 0.016; COPY[1][3] = b2 - 0.020; COPY[1][4] = b2 - 0.004;
+    COPY[2][1] = b2 - 0.004; COPY[2][2] = b2 + 0.016; COPY[2][3] = b3 - 0.020; COPY[2][4] = b3 - 0.004;
+    COPY[3][1] = b3 - 0.004; COPY[3][2] = b3 + 0.016; COPY[3][3] = b4 - 0.020; COPY[3][4] = b4 - 0.004;
+    COPY[4][1] = pauseEnd - 0.004; COPY[4][2] = pauseEnd + 0.016; COPY[4][3] = b5 - 0.020; COPY[4][4] = b5 - 0.004;
 
-    WARNING_FADE[0] = b4 - 0.005; WARNING_FADE[1] = b4 + 0.035;
-    WARNING_FADE[2] = pauseEnd - 0.045; WARNING_FADE[3] = pauseEnd - 0.005;
+    WARNING_FADE[0] = b4 - 0.004; WARNING_FADE[1] = b4 + 0.016;
+    WARNING_FADE[2] = pauseEnd - 0.020; WARNING_FADE[3] = pauseEnd - 0.004;
 
     ZONE_BOUNDS[0] = b1; ZONE_BOUNDS[1] = b2; ZONE_BOUNDS[2] = b3; ZONE_BOUNDS[3] = pauseEnd;
   }
