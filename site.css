@@ -162,21 +162,22 @@ body { overflow-x: hidden; }
   opacity: 0; transition: opacity 0.4s;
 }
 
-/* Edge definition for white type over film — a wide, low-opacity ink halo
-   rather than a drop shadow, so it separates the letterforms from a busy
-   frame without reading as a bevel. */
+/* Edge definition for white type over film. Kept deliberately tight: a wide
+   blur on display type at line-height 1.12 makes the halos of adjacent lines
+   overlap and flood the counters and inter-line gaps, which reads as the
+   whole block going grey even though the glyphs are still full-strength
+   --color-bg. The scrim above does the background work; this only needs to
+   hold the letter edges apart from a busy frame. */
 .zone-copy .display-1,
 .zone-copy .display-2,
 .zone-copy .zc-sub,
 .zone-copy .scroll-cue,
 .zone-copy .hero-lockup .word,
 .zone-label {
-  text-shadow:
-    0 2px 44px color-mix(in srgb, var(--color-text) 60%, transparent),
-    0 1px 5px color-mix(in srgb, var(--color-text) 40%, transparent);
+  text-shadow: 0 1px 14px color-mix(in srgb, var(--color-text) 38%, transparent);
 }
 .zone-copy .hero-lockup .mark {
-  filter: drop-shadow(0 2px 24px color-mix(in srgb, var(--color-text) 55%, transparent));
+  filter: drop-shadow(0 1px 10px color-mix(in srgb, var(--color-text) 38%, transparent));
 }
 .film-scrim.live { opacity: 1; }
 
