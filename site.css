@@ -212,7 +212,12 @@ body { overflow-x: hidden; }
    (film behind, text pinned over a dark gradient) just delivered per-chapter
    instead of continuously scrubbed. */
 
-html.film-loops { scroll-snap-type: y mandatory; }
+/* proximity, never mandatory: mandatory snap traps the scroll at the end of
+   the last chapter, so everything after the film — services, beyond fashion,
+   the proof numbers, the poster close and the footer — becomes unreachable on
+   a phone. proximity still snaps each chapter cleanly when you're near one,
+   but always lets you scroll on through to the bottom of the page. */
+html.film-loops { scroll-snap-type: y proximity; }
 .descent-mobile { display: none; }
 .descent-mobile .m-zone {
   position: relative;
@@ -240,6 +245,16 @@ html.film-loops { scroll-snap-type: y mandatory; }
   color: var(--color-bg);
 }
 .descent-mobile .m-copy .display-2 { font-size: clamp(28px, 8vw, 44px); }
+/* same tight edge halo the desktop film copy uses, so the phone chapters get
+   the legibility fix too — the desktop rules target .zone-copy, which is
+   hidden in this mode */
+.descent-mobile .m-copy .display-2,
+.descent-mobile .m-copy .display-1,
+.descent-mobile .m-copy .zc-sub,
+.descent-mobile .m-kicker,
+.descent-mobile .m-copy .hero-lockup .word {
+  text-shadow: 0 1px 14px color-mix(in srgb, var(--color-text) 38%, transparent);
+}
 .descent-mobile .m-kicker {
   display: flex; align-items: center; gap: var(--space-3);
   font-family: var(--font-heading); font-weight: var(--font-heading-weight);
@@ -250,7 +265,8 @@ html.film-loops { scroll-snap-type: y mandatory; }
 .descent-mobile .m-copy .zc-sub { margin-top: var(--space-3); color: var(--ground-70); font-size: 15px; }
 .descent-mobile .m-zone--hero .m-copy {
   top: 0; bottom: auto; display: flex; flex-direction: column; justify-content: flex-end;
-  padding-top: calc(var(--space-8) * 2);
+  /* clears the two-row mobile nav (~69px) rather than tucking under it */
+  padding-top: calc(var(--space-8) * 2 + var(--space-6));
 }
 .descent-mobile .hero-lockup { gap: var(--space-3); }
 .descent-mobile .hero-lockup .mark { height: clamp(30px, 8.5vw, 54px); }
@@ -405,8 +421,21 @@ html.film-loops { scroll-snap-type: y mandatory; }
   .cell:first-child, .counter:first-child { border-top: 0; }
   .beyond .beyond-row { grid-template-columns: 1fr; gap: var(--space-2); }
   .footer-grid { grid-template-columns: 1fr; }
-  .site-nav a.nav-link { display: none; }
   .poster-actions { gap: var(--space-6); }
+
+  /* Nav wraps to two flush-left rows rather than hiding the links: the four
+     labels plus the lockup will not fit on one 375px row, but they are the
+     only way into services / contact on a phone, so they stay visible. */
+  .site-nav {
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    padding-top: var(--space-3);
+    padding-bottom: var(--space-3);
+  }
+  .site-nav .brand-lockup { flex: 0 0 100%; margin-right: 0; }
+  .site-nav .brand-lockup .mark { height: 18px; }
+  .site-nav .brand-lockup .word { font-size: 16px; }
+  .site-nav a.nav-link { font-size: 11px; letter-spacing: 0.01em; }
 }
 
 /* mobile / coarse-pointer film mode: stacked autoplay loops, no scrub */
