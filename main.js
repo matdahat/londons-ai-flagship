@@ -48,7 +48,6 @@
   var zoneIndex = document.getElementById('zone-index');
   var zoneName = document.getElementById('zone-name');
   var nav = document.getElementById('site-nav');
-  var navBrand = nav.querySelector('.brand-lockup');
   var mainContent = document.getElementById('main-content');
   var warningEl = document.getElementById('zone-warning');
 
@@ -334,9 +333,10 @@
       var drift = (1 - o) * 14;
       if (el.id !== 'copy-hero') {
         el.style.transform = 'translateY(calc(-50% + ' + drift + 'px))';
-      } else {
-        navBrand.style.opacity = 1 - o;
       }
+      /* the nav lockup used to fade out here so the giant hero lockup could
+         own the brand; it now sits inside a solid accent masthead, so it
+         stays put */
     }
 
     /* THE WARNING — light-ground pause, occludes the held film frame */
@@ -420,7 +420,6 @@
     update();
     requestAnimationFrame(raf);
   } else {
-    var mobileHeroLockup = document.querySelector('.descent-mobile .hero-lockup');
     var mobileWarning = document.querySelector('.descent-mobile .m-warning');
     function loopsNavState() {
       if (!window.innerWidth || !window.innerHeight) return;
@@ -431,10 +430,7 @@
         overWarning = wr.top <= nav.offsetHeight && wr.bottom > nav.offsetHeight;
       }
       nav.classList.toggle('on-ground', mcTop <= nav.offsetHeight || overWarning);
-      if (mobileHeroLockup) {
-        var r = mobileHeroLockup.getBoundingClientRect();
-        navBrand.style.opacity = (r.bottom > 0 && r.top < window.innerHeight) ? 0 : 1;
-      }
+      /* nav lockup stays visible — it lives in the accent masthead now */
     }
     window.addEventListener('scroll', loopsNavState, { passive: true });
     loopsNavState();

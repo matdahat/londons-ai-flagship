@@ -43,6 +43,21 @@ body { overflow-x: hidden; }
   transition: background 0.35s, color 0.35s, border-color 0.35s;
   border-bottom: 2px solid transparent;
 }
+/* Over the film the nav is a solid accent masthead rather than transparent
+   type floating on the footage: it gives the page a definite header and makes
+   the nav legible on every frame regardless of what the film is doing. On red
+   the usual red ".ai" would disappear, so the mark and ".ai" invert to ink —
+   white wordmark, black bridge, black ".ai". */
+.site-nav:not(.on-ground) {
+  background: var(--color-accent);
+}
+.site-nav:not(.on-ground) .brand-lockup .mark,
+.site-nav:not(.on-ground) .brand-lockup .word .ai {
+  color: var(--color-text);
+}
+.site-nav:not(.on-ground) a.nav-link:hover { color: var(--color-text); }
+.site-nav:not(.on-ground) :focus-visible { outline-color: var(--color-bg); }
+
 .site-nav.on-ground {
   background: var(--color-bg); color: var(--color-text);
   border-bottom-color: var(--color-divider);
