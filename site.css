@@ -273,7 +273,21 @@ html.film-loops { scroll-snap-type: y proximity; }
 .descent-mobile .hero-lockup .word { font-size: clamp(42px, 11.8vw, 76px); }
 .descent-mobile .m-zone--hero .display-2 {
   font-size: clamp(18px, 5vw, 26px); margin-top: var(--space-4);
-  color: var(--ground-70);
+  /* full strength, not --ground-70: this is the tagline, not supporting text,
+     and at 70% opacity it disappeared over the bright river in clip 1 */
+  color: var(--color-bg);
+}
+/* The hero is the one chapter carrying its copy at the TOP — every other
+   chapter sits its copy at the bottom, which is why the shared scrim is
+   weighted that way. Without this the hero tagline lands around 22% of the
+   viewport, right where the shared gradient has already gone transparent,
+   and over the brightest part of the film. */
+.descent-mobile .m-zone--hero::after {
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--color-text) 72%, transparent) 0%,
+    color-mix(in srgb, var(--color-text) 56%, transparent) 34%,
+    transparent 64%,
+    color-mix(in srgb, var(--color-text) 55%, transparent) 100%);
 }
 /* THE WARNING, mobile — its own full-height light-ground chapter, same snap rhythm */
 .descent-mobile .m-warning {
