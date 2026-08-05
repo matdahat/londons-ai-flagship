@@ -7,6 +7,39 @@
 
   var doc = document.documentElement;
 
+  /* self-heal stale HTML — see tools/stamp-assets.sh for why this exists.
+     GitHub Pages caches index.html itself for up to 10 minutes with no way
+     to override that, so a browser can be looking at a page from before the
+     last deploy with no signal anything's wrong. version.txt is fetched with
+     cache: 'no-store' so it always reflects the live deploy; if it disagrees
+     with this page's own build-stamp meta tag, force a fresh navigation.
+     No-ops on localhost — the dev servers don't serve version.txt. */
+  if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+    (function () {
+      var mine = (document.querySelector('meta[name="build-stamp"]') || {}).content;
+      var lastCheck = 0;
+      function checkFresh() {
+        var now = Date.now();
+        if (now - lastCheck < 60000) return; /* visibilitychange can fire often; keep this cheap */
+        lastCheck = now;
+        if (sessionStorage.getItem('lai_reloaded')) return; /* at most one auto-reload per tab */
+        fetch('/version.txt', { cache: 'no-store' }).then(function (r) { return r.text(); }).then(function (v) {
+          v = v.trim();
+          if (v && mine && v !== mine) {
+            sessionStorage.setItem('lai_reloaded', '1');
+            var u = new URL(location.href);
+            u.searchParams.set('_r', now); /* force a real fetch, not the cached document */
+            location.replace(u.toString());
+          }
+        }).catch(function () {}); /* a network hiccup just means we stay on the page we have */
+      }
+      checkFresh();
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'visible') checkFresh();
+      });
+    })();
+  }
+
   /* ————— film mode: scroll-scrub on desktop, snap-through story chapters on touch/small —————
      Tried scroll-scrubbing on touch too (it's scrollY-driven, not gesture-driven, so it
      technically works) — real-device testing showed it just doesn't feel right on a phone,
