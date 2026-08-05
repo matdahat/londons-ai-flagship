@@ -356,6 +356,8 @@
        never sits light-on-light */
     var mcTop = mainContent.getBoundingClientRect().top;
     nav.classList.toggle('on-ground', mcTop <= nav.offsetHeight || wo > 0.5);
+    /* the zone label sits over the same light panel, so it flips too */
+    zoneLabel.classList.toggle('on-light', wo > 0.5);
 
     window.__descent = { p: p, frame: currentFrame, zone: lastZone, live: live, warning: wo };
   }

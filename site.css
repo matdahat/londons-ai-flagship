@@ -112,6 +112,11 @@ body { overflow-x: hidden; }
   pointer-events: none;
 }
 .zone-label.live { opacity: 1; }
+/* THE WARNING puts a light panel behind the label, where reversed white type
+   and its ink halo both disappear. Flip to ink for that beat, same as the nav
+   already does. */
+.zone-label.on-light { color: var(--color-text); text-shadow: none; }
+.zone-label.on-light .zl-index { color: color-mix(in srgb, var(--color-text) 55%, transparent); }
 .zone-label .zl-rule { width: 34px; height: 2px; background: var(--color-accent); align-self: center; }
 .zone-label .zl-index { color: var(--ground-70); }
 
