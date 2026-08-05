@@ -434,6 +434,36 @@
     requestAnimationFrame(raf);
   } else {
     var mobileWarning = document.querySelector('.descent-mobile .m-warning');
+
+    /* chapter rail — .descent-progress is desktop-only (film-loops mode hides
+       it), so mobile had nothing telling you where you were in the descent or
+       how many chapters were left. One pip per chapter, in document order. */
+    var mProgress = document.getElementById('m-progress');
+    var chapters = document.querySelectorAll('.descent-mobile .m-zone, .descent-mobile .m-warning');
+    var pips = [];
+    if (mProgress) {
+      for (var ci = 0; ci < chapters.length; ci++) {
+        pips.push(mProgress.appendChild(document.createElement('span')));
+      }
+    }
+    function chapterRail() {
+      if (!pips.length || !window.innerHeight) return;
+      /* whichever chapter owns the viewport midpoint is the one you're on */
+      var mid = window.innerHeight / 2;
+      var current = -1;
+      for (var i = 0; i < chapters.length; i++) {
+        var r = chapters[i].getBoundingClientRect();
+        if (r.top <= mid && r.bottom > mid) { current = i; break; }
+      }
+      mProgress.classList.toggle('live', current >= 0);
+      if (current < 0) return; /* past the descent — leave the pips as they were */
+      for (var j = 0; j < pips.length; j++) {
+        pips[j].classList.toggle('done', j < current);
+        pips[j].classList.toggle('now', j === current);
+      }
+      mProgress.classList.toggle('on-light', chapters[current] === mobileWarning);
+    }
+
     function loopsNavState() {
       if (!window.innerWidth || !window.innerHeight) return;
       var mcTop = mainContent.getBoundingClientRect().top;
@@ -444,8 +474,10 @@
       }
       nav.classList.toggle('on-ground', mcTop <= nav.offsetHeight || overWarning);
       /* nav lockup stays visible — it lives in the accent masthead now */
+      chapterRail();
     }
     window.addEventListener('scroll', loopsNavState, { passive: true });
+    window.addEventListener('resize', chapterRail);
     loopsNavState();
 
     /* play only the clip currently in view — six autoplaying loops at once
