@@ -350,6 +350,11 @@
     warningEl.style.opacity = wo;
     warningEl.style.visibility = wo > 0.01 ? 'visible' : 'hidden';
     warningEl.style.pointerEvents = wo > 0.5 ? 'auto' : 'none';
+    /* the beat's own 0-1 progress, driving the drifting ruler and the gauge fill.
+       The global rail advances only ~17% across this pause, which is not enough
+       of a cue that a 170vh pinned panel is still moving. */
+    var wp = (p - WARNING_FADE[0]) / (WARNING_FADE[3] - WARNING_FADE[0]);
+    warningEl.style.setProperty('--wp', (wp < 0 ? 0 : wp > 1 ? 1 : wp).toFixed(4));
 
     /* nav ground state — also flips dark-on-light while THE WARNING's light
        ground is substantially covering the canvas, so the reversed lockup
