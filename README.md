@@ -7,13 +7,18 @@ Scrolling down is a single unbroken descent:
 `THE CITY → THE MACHINE → THE STUDIO → THE FLOOR → (THE WARNING) → THE CONVERGENCE`
 told through six chained black-and-white clips scrubbed as a canvas frame
 sequence. After the descent the page runs on a light ground: Services (Business
-AI, then Creative AI), Every sector, The numbers, Commercial judgement, How we
-work, and a closing poster with the contact form.
+AI, then Creative AI), Every sector, The numbers, Commercial judgement, About
+(Matt Meyers' bio), How we work, and a closing poster with the contact form.
 
 Copy follows the humanizer standard: no em dashes, no mirrored "isn't / it's"
 lines, no stock AI vocabulary. The desktop descent copy (`.zone-copy`) and the
 mobile chapters (`.descent-mobile .m-copy`) are separate copies of the same
 lines, so edit both.
+
+The `<head>` carries JSON-LD for Londons.ai and Matt Meyers. It repeats claims
+from the About section (role, 30 years in music, areas of expertise), so change
+the two together. About is written for Londons.ai, so HitVocals appears only as
+one inline link there and is deliberately absent from the JSON-LD.
 
 ## Run locally
 
