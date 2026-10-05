@@ -546,7 +546,7 @@ html.film-loops { scroll-snap-type: y proximity; }
 }
 .about-id p { margin: 0; font-size: 14px; line-height: 1.5; max-width: 26ch; color: color-mix(in srgb, var(--color-text) 78%, transparent); }
 .about-body p {
-  margin: 0 0 var(--space-4); max-width: 66ch; font-size: 15px; line-height: 1.6;
+  margin: 0 0 var(--space-4); font-size: 15px; line-height: 1.6;
   color: color-mix(in srgb, var(--color-text) 78%, transparent);
 }
 .about-body .about-lead {
