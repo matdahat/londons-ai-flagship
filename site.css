@@ -552,11 +552,6 @@ html.film-loops { scroll-snap-type: y proximity; }
 .about-body .about-lead {
   font-size: clamp(17px, 1.5vw, 21px); line-height: 1.5; color: var(--color-text);
 }
-/* Audiofreaks Music is its own row under Matt's bio, at body size like the rest.
-   The closing quote and button sit in a third row, in the same right-hand column. */
-.about-company { margin-top: calc(var(--space-8) * 2); }
-.about-close { border-top: 0; padding-top: 0; margin-top: var(--space-2); }
-.about-close .about-body { grid-column: 2; }
 .about-quote {
   margin: var(--space-8) 0 0; padding: var(--space-4) 0 0; max-width: 34ch;
   border-top: 2px solid var(--color-divider);
@@ -665,7 +660,6 @@ html.film-loops { scroll-snap-type: y proximity; }
   .cell:first-child, .counter:first-child { border-top: 0; }
   .beyond .beyond-row { grid-template-columns: 1fr; gap: var(--space-2); }
   .group-head, .judgement .judgement-grid, .about-grid { grid-template-columns: 1fr; gap: var(--space-3); }
-  .about-close .about-body { grid-column: auto; }
   .questions { grid-template-columns: repeat(2, 1fr); }
   .question, .question:nth-child(3n+1) { border-left: 2px solid var(--color-divider); padding-left: var(--space-4); border-top: 0; }
   .question:nth-child(odd) { border-left: 0; padding-left: 0; }
