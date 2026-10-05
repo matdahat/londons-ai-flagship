@@ -441,6 +441,38 @@ html.film-loops { scroll-snap-type: y proximity; }
 .cell p { font-size: 14px; line-height: 1.55; margin: 0; color: color-mix(in srgb, var(--color-text) 78%, transparent); }
 .section-head { margin-bottom: calc(var(--space-8) * 1.25); }
 .section-head .display-2 { max-width: 20ch; }
+.section-lead {
+  margin: var(--space-4) 0 0; max-width: 56ch;
+  font-size: clamp(16px, 1.35vw, 19px); line-height: 1.55;
+  color: color-mix(in srgb, var(--color-text) 78%, transparent);
+}
+
+/* Services run in two groups, Business AI then Creative AI. The cells carry a
+   sentence plus a quieter "covers" line, so they need more air than the old
+   one-liners. Three to a row means the second row of Business AI needs its own
+   left-edge and top-rule handling; :first-child alone only covers row one. */
+.service-group + .service-group { margin-top: calc(var(--space-8) * 2); }
+.group-head {
+  display: grid; grid-template-columns: minmax(200px, 4fr) 8fr;
+  gap: var(--space-6); align-items: baseline; margin-bottom: var(--space-6);
+}
+.group-head h3 { font-size: clamp(24px, 3vw, 40px); letter-spacing: -0.02em; margin: 0; }
+.group-head p {
+  margin: 0; font-size: 15px; line-height: 1.55; max-width: 62ch;
+  color: color-mix(in srgb, var(--color-text) 78%, transparent);
+}
+.cells--rich .cell { padding-bottom: calc(var(--space-8) * 1.25); }
+.cells--3 .cell:nth-child(3n+1) { border-left: 0; padding-left: 0; }
+.cells--3 .cell:nth-child(n+4) { border-top: 2px solid var(--color-divider); }
+.cell .cell-covers {
+  margin-top: var(--space-3); font-size: 12px; line-height: 1.5;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+/* narrow three-up: the longer titles wrap to two lines, which would push those
+   cells' text a line lower than their neighbours. Reserve room for two lines. */
+@media (min-width: 901px) and (max-width: 1360px) {
+  .cells--rich .cell-kicker { min-height: 6.7em; }
+}
 
 /* BEYOND FASHION */
 .beyond .beyond-row {
@@ -475,6 +507,55 @@ html.film-loops { scroll-snap-type: y proximity; }
 .proof-attribution {
   margin-top: var(--space-6); font-size: 11px;
   color: color-mix(in srgb, var(--color-text) 55%, transparent); max-width: 62ch;
+}
+
+/* COMMERCIAL JUDGEMENT */
+.judgement .judgement-grid {
+  display: grid; grid-template-columns: minmax(200px, 4fr) 8fr;
+  gap: var(--space-6) var(--space-8); align-items: start;
+}
+.judgement h2 { max-width: 12ch; }
+.judgement-body > p:first-child {
+  margin: 0 0 var(--space-4); font-size: 15px;
+  color: color-mix(in srgb, var(--color-text) 78%, transparent);
+}
+.judgement-list {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(2, 1fr); column-gap: var(--space-6);
+}
+.judgement-list li {
+  padding: var(--space-3) 0; border-top: 2px solid var(--color-divider);
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: clamp(18px, 1.8vw, 24px); letter-spacing: -0.015em;
+}
+.judgement-line {
+  margin: var(--space-8) 0 0; max-width: 34ch;
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: clamp(19px, 2vw, 25px); letter-spacing: -0.015em;
+}
+
+/* HOW WE WORK: the six questions we start from, then audit / build / embed */
+.questions {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border-top: 2px solid var(--color-divider); border-bottom: 2px solid var(--color-divider);
+}
+.question {
+  padding: var(--space-6) var(--space-4) var(--space-6) var(--space-4);
+  border-left: 2px solid var(--color-divider);
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: clamp(20px, 2.1vw, 30px); line-height: 1.12; letter-spacing: -0.02em;
+}
+.question:nth-child(3n+1) { border-left: 0; padding-left: 0; }
+.question:nth-child(n+4) { border-top: 2px solid var(--color-divider); }
+.q-index {
+  display: block; margin-bottom: var(--space-2); color: var(--color-accent);
+  font-size: 11px; letter-spacing: 0.1em;
+}
+.questions-coda {
+  margin: 0; padding: var(--space-8) 0; max-width: 34ch;
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: clamp(19px, 2vw, 25px); letter-spacing: -0.015em;
 }
 
 /* POSTER CLOSE */
@@ -544,6 +625,11 @@ html.film-loops { scroll-snap-type: y proximity; }
   .cell, .counter { border-left: 0; padding-left: 0; border-top: 2px solid var(--color-divider); padding-bottom: var(--space-8); }
   .cell:first-child, .counter:first-child { border-top: 0; }
   .beyond .beyond-row { grid-template-columns: 1fr; gap: var(--space-2); }
+  .group-head, .judgement .judgement-grid { grid-template-columns: 1fr; gap: var(--space-3); }
+  .questions { grid-template-columns: repeat(2, 1fr); }
+  .question, .question:nth-child(3n+1) { border-left: 2px solid var(--color-divider); padding-left: var(--space-4); border-top: 0; }
+  .question:nth-child(odd) { border-left: 0; padding-left: 0; }
+  .question:nth-child(n+3) { border-top: 2px solid var(--color-divider); }
   .footer-grid { grid-template-columns: 1fr; }
   .poster-actions { gap: var(--space-6); }
 
@@ -560,6 +646,13 @@ html.film-loops { scroll-snap-type: y proximity; }
   .site-nav .brand-lockup .mark { height: 18px; }
   .site-nav .brand-lockup .word { font-size: 16px; }
   .site-nav a.nav-link { font-size: 11px; letter-spacing: 0.01em; }
+}
+
+/* phones: two columns of 30px questions or labels would wrap badly, so go to one */
+@media (max-width: 560px) {
+  .questions, .judgement-list { grid-template-columns: 1fr; }
+  .question, .question:nth-child(3n+1), .question:nth-child(odd) { border-left: 0; padding-left: 0; }
+  .question:nth-child(n+2) { border-top: 2px solid var(--color-divider); }
 }
 
 /* mobile / coarse-pointer film mode: stacked autoplay loops, no scrub */

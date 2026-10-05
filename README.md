@@ -6,8 +6,14 @@ The Londons.ai site, deployed to **https://londons.ai** via GitHub Pages
 Scrolling down is a single unbroken descent:
 `THE CITY → THE MACHINE → THE STUDIO → THE FLOOR → (THE WARNING) → THE CONVERGENCE`
 told through six chained black-and-white clips scrubbed as a canvas frame
-sequence, followed by light-ground sections proving the offer runs across every
-part of a business, not just fashion.
+sequence. After the descent the page runs on a light ground: Services (Business
+AI, then Creative AI), Every sector, The numbers, Commercial judgement, How we
+work, and a closing poster with the contact form.
+
+Copy follows the humanizer standard: no em dashes, no mirrored "isn't / it's"
+lines, no stock AI vocabulary. The desktop descent copy (`.zone-copy`) and the
+mobile chapters (`.descent-mobile .m-copy`) are separate copies of the same
+lines, so edit both.
 
 ## Run locally
 
@@ -76,6 +82,16 @@ rebuilds automatically.
 `main.js?v=…`; if that version does not change, the asset URL does not change,
 and browsers keep serving the copy they already cached — the deploy goes live
 but looks like nothing happened until a manual hard refresh. The script writes
-a fresh timestamp into both links so the browser is obliged to refetch. To roll back to the
-previous five-model build: `git revert <deploy commit>` or reset to
-`33c35d4`.
+a fresh timestamp into both links so the browser is obliged to refetch.
+
+The same script also writes that stamp into a `build-stamp` meta tag and into
+`version.txt`. GitHub Pages sends `cache-control: max-age=600` on every file,
+including `index.html`, and Pages offers no way to change that, so a browser can
+hold an old copy of the page for ten minutes after a deploy. On load (and when a
+background tab comes back into view) `main.js` fetches `version.txt` uncached
+and, if it disagrees with the page's own stamp, reloads once to a cache-busted
+URL. It does nothing on localhost.
+
+To roll back to the previous five-model build: `git revert <deploy commit>` or
+reset to `33c35d4`. The last deploy before the services, judgement and approach
+content was added was `27abdce`.
