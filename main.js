@@ -434,6 +434,87 @@
   }, { threshold: 0.6 });
   document.querySelectorAll('.count').forEach(function (el) { counterObserver.observe(el); });
 
+  /* ————— contact form —————
+     The form is a plain HTML POST to Formspree, so it still works with no script. This
+     upgrade validates inline, sends in the background and shows the result on the page
+     instead of dropping the visitor on Formspree's own thank-you page. It shares one
+     markup for desktop and mobile. */
+  var contactForm = document.getElementById('contact-form');
+  if (contactForm) {
+    var cfStatus = document.getElementById('cf-status');
+    var cfSuccess = document.getElementById('cf-success');
+    var cfButton = contactForm.querySelector('.btn-submit');
+    var cfLabel = cfButton.querySelector('.btn-label');
+    var cfSendText = cfLabel.textContent;
+    var CF_REQUIRED = ['name', 'email', 'message'];
+    var CF_ERRORS = {
+      name: 'Please tell us your name.',
+      email: 'Please enter your email so we can reply.',
+      emailBad: "That email address doesn't look right.",
+      message: "Please add a few lines about what you'd like help with."
+    };
+    contactForm.noValidate = true; /* our messages replace the browser's, but only when script runs */
+
+    var cfProblem = function (key) {
+      var el = document.getElementById('cf-' + key);
+      if (el.value.replace(/\s+/g, '') === '') return CF_ERRORS[key];
+      if (key === 'email' && el.validity && el.validity.typeMismatch) return CF_ERRORS.emailBad;
+      return '';
+    };
+    var cfShowError = function (key, msg) {
+      var el = document.getElementById('cf-' + key), err = document.getElementById('cf-' + key + '-err');
+      err.textContent = msg; err.hidden = false;
+      el.setAttribute('aria-invalid', 'true');
+      el.parentNode.classList.add('has-error');
+    };
+    var cfClearError = function (key) {
+      var el = document.getElementById('cf-' + key), err = document.getElementById('cf-' + key + '-err');
+      err.textContent = ''; err.hidden = true;
+      el.removeAttribute('aria-invalid');
+      el.parentNode.classList.remove('has-error');
+    };
+    CF_REQUIRED.forEach(function (key) {
+      document.getElementById('cf-' + key).addEventListener('input', function () { cfClearError(key); });
+    });
+    var cfSetSending = function (on) {
+      cfButton.disabled = on;
+      cfLabel.textContent = on ? 'Sending…' : cfSendText;
+      contactForm.setAttribute('aria-busy', on ? 'true' : 'false');
+    };
+    var cfSent = function () {
+      document.getElementById('cf-success-name').textContent = document.getElementById('cf-name').value.trim().split(/\s+/)[0];
+      document.getElementById('cf-success-email').textContent = document.getElementById('cf-email').value.trim();
+      contactForm.hidden = true;
+      cfSuccess.hidden = false;
+      cfSuccess.focus();
+    };
+    var cfFailed = function () {
+      cfSetSending(false);
+      cfStatus.hidden = false;
+    };
+
+    contactForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      cfStatus.hidden = true;
+      var firstBad = null;
+      CF_REQUIRED.forEach(function (key) {
+        var msg = cfProblem(key);
+        if (msg) { cfShowError(key, msg); if (!firstBad) firstBad = key; } else { cfClearError(key); }
+      });
+      if (firstBad) { document.getElementById('cf-' + firstBad).focus(); return; }
+
+      /* only a real Formspree address may be posted to; anything else (a missing or
+         placeholder action) shows the email fallback instead of pretending to send */
+      var endpoint = contactForm.getAttribute('action') || '';
+      if (!/^https:\/\/formspree\.io\/f\/[A-Za-z0-9]+$/.test(endpoint)) { cfFailed(); return; }
+
+      cfSetSending(true);
+      fetch(endpoint, { method: 'POST', body: new FormData(contactForm), headers: { 'Accept': 'application/json' } })
+        .then(function (res) { if (!res.ok) throw new Error('status ' + res.status); })
+        .then(cfSent, cfFailed);
+    });
+  }
+
   /* ————— boot ————— */
   function raf(time) {
     if (lenis) lenis.raf(time);

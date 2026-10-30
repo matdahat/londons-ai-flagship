@@ -20,6 +20,23 @@ from the About section (role, 30 years in music, areas of expertise), so change
 the two together. About is written for Londons.ai, so HitVocals appears only as
 one inline link there and is deliberately absent from the JSON-LD.
 
+## The contact form
+
+The form in `#contact` posts to Formspree, to the "Londons.ai contact" form
+(`https://formspree.io/f/mkjjvzrq`) in Matt's account. That is a separate form from
+the Audiofreaks one, so enquiries stay labelled by site with their own inbox and spam
+filter. Submissions, including anything filed under Spam, are in the Formspree
+dashboard, and a notification email arrives titled "New enquiry from londons.ai".
+
+It is a plain HTML POST, so it works without script. `main.js` upgrades it: inline
+validation, a background send, and a confirmation on the page instead of Formspree's own
+thank-you page. The field names (`name`, `email`, `company`, `interest`, `message`) are
+what Formspree receives, and `email` is the reply-to, so renaming them changes the
+notification emails. `_gotcha` is Formspree's hidden spam trap, so leave it empty and
+unfocusable. `main.js` only posts to an address shaped like
+`https://formspree.io/f/<id>`, and `tools/stamp-assets.sh` refuses to run if the
+`REPLACE_WITH_FORMSPREE_ID` placeholder is ever back in `index.html`.
+
 ## Run locally
 
 ```

@@ -24,6 +24,15 @@ set -euo pipefail
 DIR="$(cd "$(dirname "$0")/.." && pwd)"
 STAMP="$(date +%Y%m%d%H%M)"
 
+# The contact form posts to Formspree. While its action is still the placeholder the
+# page looks fine and sends nowhere, so refuse to stamp (and so to deploy) until the
+# real address has been pasted in.
+if grep -q 'REPLACE_WITH_FORMSPREE_ID' "$DIR/index.html"; then
+  echo "ERROR: the contact form in index.html still has the REPLACE_WITH_FORMSPREE_ID placeholder." >&2
+  echo "       Paste the real Formspree address into the form's action before deploying." >&2
+  exit 1
+fi
+
 sed -i '' -E "s#(site\.css\?v=)[^\"]*#\1${STAMP}#; s#(main\.js\?v=)[^\"]*#\1${STAMP}#; s#(name=\"build-stamp\" content=\")[^\"]*#\1${STAMP}#" "$DIR/index.html"
 printf '%s' "$STAMP" > "$DIR/version.txt"
 

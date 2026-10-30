@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Londons.ai | Making AI work for London businesses</title>
 <meta name="description" content="London AI consultancy. We work out what AI can do for your business, then build it: strategy, automation, company knowledge, AI products, video and content.">
-<meta name="build-stamp" content="202610051937">
+<meta name="build-stamp" content="202610301615">
 <link rel="icon" type="image/svg+xml" href="assets/logo-mark.svg">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="vendor/lenis.css">
-<link rel="stylesheet" href="site.css?v=202610051937">
+<link rel="stylesheet" href="site.css?v=202610301615">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -409,19 +409,69 @@
     </div>
   </section>
 
-  <section class="section poster" id="contact">
+  <section class="section poster contact" id="contact">
     <p class="eyebrow reveal">Start here</p>
     <h2 class="display-1 reveal">Let's work out what AI can do for your business.</h2>
-    <div class="poster-actions reveal">
-      <a class="btn btn-ground" href="mailto:hello@londons.ai">Start the conversation</a>
-      <form class="capture" action="mailto:hello@londons.ai" method="post" enctype="text/plain">
-        <label for="capture-email">Or leave your email</label>
-        <div class="capture-row">
-          <input class="input" id="capture-email" name="email" type="email" placeholder="you@company.co.uk" autocomplete="email" required>
-          <button class="btn btn-ground" type="submit">Send</button>
+
+    <div class="contact-grid">
+      <div class="contact-intro">
+        <p class="contact-lead reveal">Tell us a little about your business and what you'd like to change.</p>
+        <p class="contact-direct reveal"><a href="mailto:hello@londons.ai">hello@londons.ai</a></p>
+        <p class="contact-place reveal">London, United Kingdom</p>
+      </div>
+
+      <div class="contact-card reveal">
+        <form class="contact-form" id="contact-form" action="https://formspree.io/f/mkjjvzrq" method="POST">
+          <div class="field">
+            <label for="cf-name">Name</label>
+            <input class="input" id="cf-name" name="name" type="text" autocomplete="name" maxlength="100" required aria-describedby="cf-name-err">
+            <p class="field-error" id="cf-name-err" hidden></p>
+          </div>
+          <div class="field">
+            <label for="cf-email">Email</label>
+            <input class="input" id="cf-email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" placeholder="you@company.co.uk" required aria-describedby="cf-email-err">
+            <p class="field-error" id="cf-email-err" hidden></p>
+          </div>
+          <div class="field">
+            <label for="cf-company">Company <span class="optional">(optional)</span></label>
+            <input class="input" id="cf-company" name="company" type="text" autocomplete="organization" maxlength="120">
+          </div>
+          <div class="field">
+            <label for="cf-interest">What do you need help with? <span class="optional">(optional)</span></label>
+            <select class="input" id="cf-interest" name="interest">
+              <option value="">Choose one</option>
+              <option>AI strategy and roadmap</option>
+              <option>Automation and AI agents</option>
+              <option>Company knowledge and search</option>
+              <option>A new product, website or app</option>
+              <option>AI video, imagery and content</option>
+              <option>Training for my team</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+          <div class="field field--wide">
+            <label for="cf-message">Message</label>
+            <textarea class="input" id="cf-message" name="message" rows="6" maxlength="5000" placeholder="For example: what takes too long, what costs too much, or what you'd like to create faster." required aria-describedby="cf-message-err"></textarea>
+            <p class="field-error" id="cf-message-err" hidden></p>
+          </div>
+
+          <input type="hidden" name="_subject" value="New enquiry from londons.ai">
+          <div class="hp" aria-hidden="true"><input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></div>
+
+          <p class="form-status field--wide" id="cf-status" role="status" hidden>Sorry, that didn't send. Please try again, or email <a href="mailto:hello@londons.ai">hello@londons.ai</a>.</p>
+
+          <div class="form-actions field--wide">
+            <button class="btn btn-submit" type="submit"><span class="btn-label">Send message</span><span aria-hidden="true">&rarr;</span></button>
+            <p class="form-note">You'll get one reply from a person, and we won't add you to a mailing list.</p>
+          </div>
+        </form>
+
+        <div class="contact-success" id="cf-success" tabindex="-1" hidden>
+          <h3>Message sent.</h3>
+          <p>Thanks, <span id="cf-success-name"></span>. A person at Londons.ai will reply to <strong id="cf-success-email"></strong>.</p>
+          <p class="form-note">If you don't hear back, check your spam folder or email <a href="mailto:hello@londons.ai">hello@londons.ai</a>.</p>
         </div>
-        <p class="capture-note">You'll get one reply from a person, and we won't add you to a mailing list.</p>
-      </form>
+      </div>
     </div>
   </section>
 
@@ -457,6 +507,6 @@
 </main>
 
 <script src="vendor/lenis.min.js"></script>
-<script src="main.js?v=202610051937"></script>
+<script src="main.js?v=202610301615"></script>
 </body>
 </html>
