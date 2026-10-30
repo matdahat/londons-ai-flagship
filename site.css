@@ -600,7 +600,6 @@ html.film-loops { scroll-snap-type: y proximity; }
 }
 .poster .eyebrow { color: var(--color-bg); }
 .poster .display-1 { max-width: 14ch; }
-.poster a { color: var(--color-bg); }
 .poster :focus-visible { outline-color: var(--color-bg); }
 
 /* CONTACT. The heading is large, so off-white on the red passes (3.8:1, large text
@@ -611,19 +610,16 @@ html.film-loops { scroll-snap-type: y proximity; }
   gap: var(--space-6) var(--space-8); align-items: start;
   margin-top: calc(var(--space-8) * 1.5);
 }
-.contact-lead, .contact-direct, .contact-place {
+.contact-lead, .contact-place {
   margin: 0 0 var(--space-4);
   font-family: var(--font-heading); font-weight: var(--font-heading-weight);
   letter-spacing: -0.015em; line-height: 1.2;
 }
-.contact-lead, .contact-direct { font-size: clamp(19px, 1.7vw, 24px); }
+.contact-lead { font-size: clamp(19px, 1.7vw, 24px); }
 .contact-lead { max-width: 24ch; margin-bottom: var(--space-6); }
 .contact-place { font-size: 19px; }
-.contact-direct a { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
-.contact-direct a:hover { text-decoration-color: color-mix(in srgb, var(--color-bg) 60%, transparent); }
 
 .contact-card { background: var(--color-bg); color: var(--color-text); padding: calc(var(--space-8) * 1.25); }
-.contact-card a { color: var(--color-accent-700); }
 .poster .contact-card :focus-visible { outline-color: var(--color-accent); }
 
 .contact-form {
@@ -695,8 +691,6 @@ html.film-loops { scroll-snap-type: y proximity; }
 .site-footer .brand-lockup .mark { height: 24px; }
 .site-footer .brand-lockup .word { font-size: 21px; }
 .footer-contact { text-align: left; font-size: 14px; line-height: 1.8; }
-.footer-contact a { color: var(--color-bg); text-decoration: none; }
-.footer-contact a:hover { color: var(--color-accent-500); }
 .footer-rule { height: 2px; background: var(--ground-40); border: 0; margin: var(--space-8) 0 var(--space-4); }
 .footer-legal { font-size: 11px; color: var(--ground-70); display: flex; justify-content: space-between; gap: var(--space-4); }
 

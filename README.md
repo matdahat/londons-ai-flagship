@@ -37,6 +37,11 @@ unfocusable. `main.js` only posts to an address shaped like
 `https://formspree.io/f/<id>`, and `tools/stamp-assets.sh` refuses to run if the
 `REPLACE_WITH_FORMSPREE_ID` placeholder is ever back in `index.html`.
 
+There is deliberately no email address anywhere on the page (Matt's choice, Oct 2026):
+not in the contact section, the footer, the structured data or the form's messages. The
+form is the only way in, so keep it working, and do not add an address back without
+asking him. The failure message therefore has nothing to fall back on.
+
 ## Run locally
 
 ```
