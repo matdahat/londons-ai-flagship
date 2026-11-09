@@ -1,7 +1,6 @@
-/* Londons.ai — The Flagship. One unbroken descent through six chained clips,
-   paced by scroll. A single light-ground pause (THE WARNING) interrupts the
-   film without cutting it: frame progress holds on clip 4's last frame while
-   the page reads, then resumes into clip 5 exactly where it left off. */
+/* Londons.ai — The Flagship. On desktop, one unbroken descent through six
+   chained clips, paced by scroll, with a line of copy pinned over each of the
+   first five. Phones get the opening clip and the copy as type instead. */
 (function () {
   'use strict';
 
@@ -82,7 +81,6 @@
   var zoneName = document.getElementById('zone-name');
   var nav = document.getElementById('site-nav');
   var mainContent = document.getElementById('main-content');
-  var warningEl = document.getElementById('zone-warning');
 
   var ZONES = [
     { index: '01', name: 'The City' },
@@ -92,76 +90,39 @@
     { index: '05', name: 'The Convergence' }
   ];
 
-  /* ————— segment plan (vh) — must match .descent-track height in site.css ————— */
-  var SEG_VH = {
-    clip1: 130, clip2: 130, clip3: 145, clip4: 130,
-    pause: 170,
-    clip5: 145, clip6: 140
-  };
-  var TOTAL_VH = SEG_VH.clip1 + SEG_VH.clip2 + SEG_VH.clip3 + SEG_VH.clip4 +
-    SEG_VH.pause + SEG_VH.clip5 + SEG_VH.clip6; /* 990 */
+  /* ————— scroll plan —————
+     .descent-track is 520vh in site.css. The six clips share the scroll evenly,
+     so the scroll fraction is also the frame fraction. Until Nov 2026 this was
+     990vh with a 170vh pause for THE WARNING; it was halved so the film stops
+     gating the page. */
 
-  var c1End = SEG_VH.clip1 / TOTAL_VH;
-  var c2End = (SEG_VH.clip1 + SEG_VH.clip2) / TOTAL_VH;
-  var c3End = (SEG_VH.clip1 + SEG_VH.clip2 + SEG_VH.clip3) / TOTAL_VH;
-  var c4End = (SEG_VH.clip1 + SEG_VH.clip2 + SEG_VH.clip3 + SEG_VH.clip4) / TOTAL_VH; /* pause start */
-  var pauseEnd = c4End + SEG_VH.pause / TOTAL_VH; /* clip5 start */
-  var c5End = pauseEnd + SEG_VH.clip5 / TOTAL_VH;
+  /* pinned copy: [element, fadeInStart, fadeInEnd, fadeOutStart, fadeOutEnd] in
+     scroll fraction. Line i plays over clip i+1; clip 6 carries none and runs
+     into the page. The windows are strictly sequential (out ends where the next
+     in begins): two lines superimposed at half opacity read as ghosting. Ramps
+     stay short so each line spends most of its time at full strength. */
+  var COPY_IDS = ['copy-hero', 'copy-z2', 'copy-z3', 'copy-z4', 'copy-z5'];
+  var COPY = [];
+  /* zone-label boundaries (scroll fraction where the label switches) */
+  var ZONE_BOUNDS = [];
 
-  /* pinned copy: [element, fadeInStart, fadeInEnd, fadeOutStart, fadeOutEnd] — in SCROLL fraction.
-     Seeded with vh-proportional estimates; refined to the real clip-boundary
-     scroll-fractions once the manifest loads (applyRefinedBoundaries below),
-     since clip durations vary slightly and this keeps text/zone timing
-     locked to the actual footage rather than the vh guess. */
-  /* fade in/out windows are deliberately near-sequential (tiny overlap, not a
-     broad crossfade) — two different paragraphs of text superimposed at 50%
-     opacity each reads as ghosting, not a blend, so the outgoing line finishes
-     fading before the incoming one starts rather than overlapping through it */
-  /* Ramps are kept short so the plateau is long. With wide ramps the copy was
-     only at full opacity for ~45% of the time it was on screen and spent the
-     rest mid-fade, which reads as grey type rather than white — the mobile
-     chapters look brighter purely because their copy never fades at all.
-     Still strictly sequential (out ends where in begins) so two paragraphs
-     are never superimposed. */
-  var COPY = [
-    [document.getElementById('copy-hero'), -1, 0, c1End - 0.020, c1End - 0.004],
-    [document.getElementById('copy-z2'), c1End - 0.004, c1End + 0.016, c2End - 0.020, c2End - 0.004],
-    [document.getElementById('copy-z3'), c2End - 0.004, c2End + 0.016, c3End - 0.020, c3End - 0.004],
-    [document.getElementById('copy-z4'), c3End - 0.004, c3End + 0.016, c4End - 0.020, c4End - 0.004],
-    [document.getElementById('copy-z5'), pauseEnd - 0.004, pauseEnd + 0.016, c5End - 0.020, c5End - 0.004]
-  ];
-  var WARNING_FADE = [c4End - 0.004, c4End + 0.016, pauseEnd - 0.020, pauseEnd - 0.004];
-  /* zone-label boundaries (scroll fraction where the eyebrow switches) — same refinement */
-  var ZONE_BOUNDS = [c1End, c2End, c3End, pauseEnd];
-
-  function applyRefinedBoundaries(zones) {
-    var f4 = zones[3];
-    if (!(f4 > 0)) return;
-    var b1 = (zones[0] / f4) * c4End;
-    var b2 = (zones[1] / f4) * c4End;
-    var b3 = (zones[2] / f4) * c4End;
-    var b4 = c4End;
-    var tail = 1 - f4;
-    var b5 = tail > 0 ? pauseEnd + ((zones[4] - f4) / tail) * (1 - pauseEnd) : c5End;
-
-    COPY[0][3] = b1 - 0.020; COPY[0][4] = b1 - 0.004;
-    COPY[1][1] = b1 - 0.004; COPY[1][2] = b1 + 0.016; COPY[1][3] = b2 - 0.020; COPY[1][4] = b2 - 0.004;
-    COPY[2][1] = b2 - 0.004; COPY[2][2] = b2 + 0.016; COPY[2][3] = b3 - 0.020; COPY[2][4] = b3 - 0.004;
-    COPY[3][1] = b3 - 0.004; COPY[3][2] = b3 + 0.016; COPY[3][3] = b4 - 0.020; COPY[3][4] = b4 - 0.004;
-    COPY[4][1] = pauseEnd - 0.004; COPY[4][2] = pauseEnd + 0.016; COPY[4][3] = b5 - 0.020; COPY[4][4] = b5 - 0.004;
-
-    WARNING_FADE[0] = b4 - 0.004; WARNING_FADE[1] = b4 + 0.016;
-    WARNING_FADE[2] = pauseEnd - 0.020; WARNING_FADE[3] = pauseEnd - 0.004;
-
-    ZONE_BOUNDS[0] = b1; ZONE_BOUNDS[1] = b2; ZONE_BOUNDS[2] = b3; ZONE_BOUNDS[3] = pauseEnd;
+  /* b = boundaries after clips 1-5 as fractions. Seeded for six equal clips,
+     then replaced by the manifest's real ones, since clip lengths vary slightly. */
+  function setBoundaries(b) {
+    COPY = COPY_IDS.map(function (id, i) {
+      var inA = i === 0 ? -1 : b[i - 1] - 0.004;
+      var inB = i === 0 ? 0 : b[i - 1] + 0.016;
+      return [document.getElementById(id), inA, inB, b[i] - 0.020, b[i] - 0.004];
+    });
+    ZONE_BOUNDS = [b[0], b[1], b[2], b[3]];
   }
+  setBoundaries([1 / 6, 2 / 6, 3 / 6, 4 / 6, 5 / 6]);
 
   /* ————— frame sequence ————— */
   var frames = [];
   var frameCount = 0;
   var framePad = 4;
   var frameExt = '.jpg';
-  var frameAtC4End = null; /* fraction of frames where clip4 ends / clip5 begins, from manifest zones */
   var loadedFlags = [];
   var currentFrame = -1;
   var pendingDraw = false;
@@ -305,22 +266,9 @@
     return p < 0 ? 0 : (p > 1 ? 1 : p);
   }
 
-  /* scroll fraction -> frame fraction, holding flat across the WARNING pause */
-  function frameFraction(p) {
-    var f4 = frameAtC4End != null ? frameAtC4End : c4End;
-    if (p <= c4End) {
-      return c4End > 0 ? (p / c4End) * f4 : 0;
-    }
-    if (p <= pauseEnd) {
-      return f4;
-    }
-    var span = 1 - pauseEnd;
-    return f4 + (span > 0 ? ((p - pauseEnd) / span) * (1 - f4) : 0);
-  }
-
+  /* the clips share the scroll evenly, so scroll fraction is frame fraction */
   function targetFrame() {
-    var ff = frameFraction(progress());
-    return Math.min(frameCount - 1, Math.round(ff * (frameCount - 1)));
+    return Math.min(frameCount - 1, Math.round(progress() * (frameCount - 1)));
   }
 
   function fadeWindow(p, a, b, c, d) {
@@ -378,26 +326,11 @@
          stays put */
     }
 
-    /* THE WARNING — light-ground pause, occludes the held film frame */
-    var wo = fadeWindow(p, WARNING_FADE[0], WARNING_FADE[1], WARNING_FADE[2], WARNING_FADE[3]);
-    warningEl.style.opacity = wo;
-    warningEl.style.visibility = wo > 0.01 ? 'visible' : 'hidden';
-    warningEl.style.pointerEvents = wo > 0.5 ? 'auto' : 'none';
-    /* the beat's own 0-1 progress, driving the drifting ruler and the gauge fill.
-       The global rail advances only ~17% across this pause, which is not enough
-       of a cue that a 170vh pinned panel is still moving. */
-    var wp = (p - WARNING_FADE[0]) / (WARNING_FADE[3] - WARNING_FADE[0]);
-    warningEl.style.setProperty('--wp', (wp < 0 ? 0 : wp > 1 ? 1 : wp).toFixed(4));
-
-    /* nav ground state — also flips dark-on-light while THE WARNING's light
-       ground is substantially covering the canvas, so the reversed lockup
-       never sits light-on-light */
+    /* nav ground state: the light style once the page content reaches it */
     var mcTop = mainContent.getBoundingClientRect().top;
-    nav.classList.toggle('on-ground', mcTop <= nav.offsetHeight || wo > 0.5);
-    /* the zone label sits over the same light panel, so it flips too */
-    zoneLabel.classList.toggle('on-light', wo > 0.5);
+    nav.classList.toggle('on-ground', mcTop <= nav.offsetHeight);
 
-    window.__descent = { p: p, frame: currentFrame, zone: lastZone, live: live, warning: wo };
+    window.__descent = { p: p, frame: currentFrame, zone: lastZone, live: live };
   }
 
   /* ————— reveals ————— */
@@ -410,29 +343,6 @@
     });
   }, { threshold: 0.18 });
   document.querySelectorAll('.reveal').forEach(function (el) { revealObserver.observe(el); });
-
-  /* ————— counters ————— */
-  function runCounter(el) {
-    var end = parseInt(el.getAttribute('data-count'), 10);
-    var t0 = null, DUR = 1400;
-    function tick(t) {
-      if (!t0) t0 = t;
-      var k = Math.min(1, (t - t0) / DUR);
-      var eased = 1 - Math.pow(1 - k, 3);
-      el.textContent = Math.round(end * eased);
-      if (k < 1) requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  }
-  var counterObserver = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (e.isIntersecting) {
-        runCounter(e.target);
-        counterObserver.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.6 });
-  document.querySelectorAll('.count').forEach(function (el) { counterObserver.observe(el); });
 
   /* ————— contact form —————
      The form is a plain HTML POST to Formspree, so it still works with no script. This
@@ -529,11 +439,9 @@
         frameCount = m.count;
         framePad = m.pad || 4;
         frameExt = m.ext || '.jpg';
-        /* manifest.zones = [afterClip1, afterClip2, afterClip3, afterClip4, afterClip5] as frame-fractions */
-        if (m.zones && m.zones.length >= 5) {
-          frameAtC4End = m.zones[3];
-          applyRefinedBoundaries(m.zones);
-        }
+        /* manifest.zones = [afterClip1 .. afterClip5] as frame fractions, which are
+           also scroll fractions now the clips share the scroll evenly */
+        if (m.zones && m.zones.length >= 5) setBoundaries(m.zones);
         loadedFlags = new Array(frameCount);
         measure();
         preload();
@@ -547,56 +455,32 @@
     update();
     requestAnimationFrame(raf);
   } else {
-    var mobileWarning = document.querySelector('.descent-mobile .m-warning');
-
-    /* chapter rail — .descent-progress is desktop-only (film-loops mode hides
-       it), so mobile had nothing telling you where you were in the descent or
-       how many chapters were left. One pip per chapter, in document order. */
-    var mProgress = document.getElementById('m-progress');
-    var chapters = document.querySelectorAll('.descent-mobile .m-zone, .descent-mobile .m-warning');
-    var pips = [];
-    if (mProgress) {
-      for (var ci = 0; ci < chapters.length; ci++) {
-        pips.push(mProgress.appendChild(document.createElement('span')));
-      }
-    }
-    function chapterRail() {
-      if (!pips.length || !window.innerHeight) return;
-      /* whichever chapter owns the viewport midpoint is the one you're on */
-      var mid = window.innerHeight / 2;
-      var current = -1;
-      for (var i = 0; i < chapters.length; i++) {
-        var r = chapters[i].getBoundingClientRect();
-        if (r.top <= mid && r.bottom > mid) { current = i; break; }
-      }
-      mProgress.classList.toggle('live', current >= 0);
-      if (current < 0) return; /* past the descent — leave the pips as they were */
-      for (var j = 0; j < pips.length; j++) {
-        pips[j].classList.toggle('done', j < current);
-        pips[j].classList.toggle('now', j === current);
-      }
-      mProgress.classList.toggle('on-light', chapters[current] === mobileWarning);
-    }
-
     function loopsNavState() {
       if (!window.innerWidth || !window.innerHeight) return;
       var mcTop = mainContent.getBoundingClientRect().top;
-      var overWarning = false;
-      if (mobileWarning) {
-        var wr = mobileWarning.getBoundingClientRect();
-        overWarning = wr.top <= nav.offsetHeight && wr.bottom > nav.offsetHeight;
-      }
-      nav.classList.toggle('on-ground', mcTop <= nav.offsetHeight || overWarning);
-      /* nav lockup stays visible — it lives in the accent masthead now */
-      chapterRail();
+      nav.classList.toggle('on-ground', mcTop <= nav.offsetHeight);
     }
     window.addEventListener('scroll', loopsNavState, { passive: true });
-    window.addEventListener('resize', chapterRail);
     loopsNavState();
 
-    /* play only the clip currently in view — six autoplaying loops at once
-       is a real battery/data cost on a phone, so pause everything off-screen
-       instead of relying on the browser to throttle it for us */
+    /* the opening clip comes in two crops: portrait for a phone held upright,
+       the original landscape loop for anything wider (a tablet on its side, a
+       narrow desktop window), so neither is stretched to fit */
+    var heroVideo = document.querySelector('.m-zone--hero video');
+    var landscape = window.matchMedia('(orientation: landscape)');
+    function pickHeroClip() {
+      if (!heroVideo) return;
+      var want = heroVideo.getAttribute(landscape.matches ? 'data-src-landscape' : 'data-src-portrait');
+      if (!want || heroVideo.getAttribute('src') === want) return;
+      heroVideo.setAttribute('src', want);
+      var r = heroVideo.getBoundingClientRect();
+      if (r.bottom > 0 && r.top < window.innerHeight) heroVideo.play().catch(function () {});
+    }
+    pickHeroClip();
+    if (landscape.addEventListener) landscape.addEventListener('change', pickHeroClip);
+
+    /* play the opening loop only while it is in view: a looping video scrolled
+       off-screen is a battery and data cost on a phone */
     var mobileVideos = document.querySelectorAll('.descent-mobile video');
     var videoObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {

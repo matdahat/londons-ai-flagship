@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Londons.ai | Making AI work for London businesses</title>
 <meta name="description" content="London AI consultancy. We work out what AI can do for your business, then build it: strategy, automation, company knowledge, AI products, video and content.">
-<meta name="build-stamp" content="202611091129">
+<meta name="build-stamp" content="202611091312">
 <link rel="icon" type="image/svg+xml" href="assets/logo-mark.svg">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="vendor/lenis.css">
-<link rel="stylesheet" href="site.css?v=202611091129">
+<link rel="stylesheet" href="site.css?v=202611091312">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -110,11 +110,12 @@
       <a class="btn btn-cta btn-cta--on-film" href="#contact">Talk to us</a>
       <a class="skip-film" href="#services">Skip the film</a>
     </div>
+    <p class="film-credit">This film was made with AI.</p>
     <p class="scroll-cue"><span class="cue-rule"></span>Scroll to descend</p>
   </div>
 
   <div class="zone-copy" id="copy-z2">
-    <p class="display-2">Somewhere in this city, your competitors are already moving.</p>
+    <p class="display-2">Automation, AI agents and company knowledge, built around the systems you already use.</p>
   </div>
 
   <div class="zone-copy" id="copy-z3">
@@ -126,30 +127,15 @@
   </div>
 
   <div class="zone-copy" id="copy-z5">
-    <p class="display-2">Every model, market and language, working together as one system.</p>
+    <p class="display-2">Imagery, video and copy at catalogue scale, in your voice and in every language you sell in.</p>
   </div>
 
-  <!-- THE WARNING — the one light-ground pause in the descent -->
-  <div class="zone-warning" id="zone-warning">
-    <div class="zone-warning-inner">
-      <p class="eyebrow">The warning</p>
-      <h2 class="display-2">The gap is already opening.</h2>
-      <p>Businesses moving on AI now build a bigger advantage every quarter. The ones waiting spend the same budgets to get less done, more slowly, against competitors who aren't.</p>
-      <p class="zw-line">If your competitors get there first, you'll be the one catching up.</p>
-    </div>
-    <div class="zw-gauge" aria-hidden="true">
-      <span class="zw-gauge-ticks"></span>
-      <span class="zw-gauge-track"><span class="zw-gauge-fill"></span></span>
-    </div>
-  </div>
-
-  <!-- stacked loops (mobile) -->
+  <!-- phones: the opening clip (portrait crop on upright screens, see main.js),
+       then the shoot and floor lines, then straight into the services -->
   <div class="descent-mobile">
-    <div class="m-progress" id="m-progress" aria-hidden="true"></div>
     <div class="m-zone m-zone--hero">
-      <video src="assets/film/clip-1-loop.mp4" muted loop playsinline preload="metadata"></video>
+      <video src="assets/film/hero-portrait-loop.mp4" data-src-portrait="assets/film/hero-portrait-loop.mp4" data-src-landscape="assets/film/clip-1-loop.mp4" poster="assets/film/hero-portrait-poster.jpg" muted loop playsinline preload="metadata"></video>
       <div class="m-copy">
-        <p class="m-kicker"><span class="zl-rule"></span>01 The City</p>
         <p class="hero-lockup" aria-hidden="true">
           <svg class="mark" viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="18" y="14" width="10" height="34" fill="currentColor"></rect>
@@ -166,46 +152,14 @@
         <h1 class="display-2">Making AI work for London businesses.</h1>
         <div class="hero-actions">
           <a class="btn btn-cta btn-cta--on-film" href="#contact">Talk to us</a>
-          <a class="skip-film" href="#services">Skip the film</a>
+          <a class="skip-film" href="#services">See what we do</a>
         </div>
+        <p class="film-credit">This film was made with AI.</p>
       </div>
     </div>
-    <div class="m-zone">
-      <video src="assets/film/clip-2-loop.mp4" muted loop playsinline preload="metadata"></video>
-      <div class="m-copy">
-        <p class="m-kicker"><span class="zl-rule"></span>02 The Machine</p>
-        <p class="display-2">Somewhere in this city, your competitors are already moving.</p>
-      </div>
-    </div>
-    <div class="m-zone">
-      <video src="assets/film/clip-3-loop.mp4" muted loop playsinline preload="metadata"></video>
-      <div class="m-copy">
-        <p class="m-kicker"><span class="zl-rule"></span>03 The Studio</p>
-        <p class="display-2">A single shoot: thousands of pounds, weeks of lead time, one look, one language.</p>
-      </div>
-    </div>
-    <div class="m-zone">
-      <video src="assets/film/clip-4-loop.mp4" muted loop playsinline preload="metadata"></video>
-      <div class="m-copy">
-        <p class="m-kicker"><span class="zl-rule"></span>04 The Floor</p>
-        <p class="display-2">The same building, a different room. Content, digital assets, apps, websites, workflows shipped in days, not quarters.</p>
-      </div>
-    </div>
-    <div class="m-warning">
-      <p class="eyebrow">The warning</p>
-      <h2>The gap is already opening.</h2>
-      <p>Businesses moving on AI now build a bigger advantage every quarter. The ones waiting spend the same budgets to get less done, more slowly, against competitors who aren't.</p>
-      <p class="zw-line">If your competitors get there first, you'll be the one catching up.</p>
-    </div>
-    <div class="m-zone">
-      <video src="assets/film/clip-5-loop.mp4" muted loop playsinline preload="metadata"></video>
-      <div class="m-copy">
-        <p class="m-kicker"><span class="zl-rule"></span>05 The Convergence</p>
-        <p class="display-2">Every model, market and language, working together as one system.</p>
-      </div>
-    </div>
-    <div class="m-zone">
-      <video src="assets/film/clip-6-loop.mp4" muted loop playsinline preload="metadata"></video>
+    <div class="m-floor">
+      <p class="m-floor-setup">A single shoot: thousands of pounds, weeks of lead time, one look, one language.</p>
+      <p class="display-2">The same building, a different room. Content, digital assets, apps, websites, workflows shipped in days, not quarters.</p>
     </div>
   </div>
 </section>
@@ -284,7 +238,9 @@
   </section>
 
   <section class="section beyond" id="beyond">
-    <p class="eyebrow reveal">Every sector</p>
+    <div class="section-head">
+      <h2 class="display-2 reveal">Every sector.</h2>
+    </div>
     <div class="beyond-row reveal">
       <h3>Fashion.</h3>
       <p>Full campaigns from a single sample.</p>
@@ -309,54 +265,31 @@
       <h3>Professional services.</h3>
       <p>The proposals, reports and client work that eat your best hours.</p>
     </div>
-    <p class="beyond-coda reveal">If your business runs on content, workflows or customer experience, we can make AI work for it.</p>
-  </section>
-
-  <section class="section proof" id="proof">
-    <p class="eyebrow reveal">The numbers</p>
-    <div class="counter-strip">
-      <div class="counter reveal">
-        <span class="num">−<span class="count" data-count="90">0</span><span class="accent">%</span></span>
-        <p class="what">Content production costs, cut by up to 90%.</p>
-        <p class="who">LuisaViaRoma</p>
-      </div>
-      <div class="counter reveal">
-        <span class="num">+<span class="count" data-count="70">0</span><span class="accent">%</span></span>
-        <p class="what">More content on the same budget.</p>
-        <p class="who">Zalando</p>
-      </div>
-      <div class="counter reveal">
-        <span class="num">Weeks<span class="accent">→</span><wbr>hours</span>
-        <p class="what">Production timelines, collapsed.</p>
-        <p class="who">Industry-wide</p>
-      </div>
-    </div>
-    <p class="proof-attribution reveal">Publicly reported industry results from AI-assisted content production at LuisaViaRoma and Zalando. Benchmarks, not Londons.ai client claims.</p>
-  </section>
-
-  <section class="section judgement" id="judgement">
-    <p class="eyebrow reveal">Commercial judgement</p>
-    <div class="judgement-grid">
-      <h2 class="display-2 reveal">AI output still needs judgement.</h2>
-      <div class="judgement-body">
-        <p class="reveal">It needs people who understand:</p>
-        <ul class="judgement-list">
-          <li class="reveal">The business</li>
-          <li class="reveal">The audience</li>
-          <li class="reveal">The brand</li>
-          <li class="reveal">The creative</li>
-          <li class="reveal">The risks</li>
-          <li class="reveal">The rights</li>
-          <li class="reveal">The commercial objective</li>
-        </ul>
-        <p class="judgement-line reveal">Londons.ai combines AI technology with real-world business and creative experience.</p>
-      </div>
-    </div>
   </section>
 
   <section class="section about" id="about">
     <div class="section-head">
       <h2 class="display-2 reveal">The experience behind Londons.ai.</h2>
+      <p class="section-lead reveal">AI output still needs judgement from people who understand the business, the audience, the brand and the rights.</p>
+    </div>
+
+    <div class="credentials">
+      <div class="credential reveal">
+        <p class="credential-big">HitVocals</p>
+        <p>The music marketplace Matt and his business partners built with AI, Bubble and Amazon Web Services.</p>
+      </div>
+      <div class="credential reveal">
+        <p class="credential-big">30+ years</p>
+        <p>In the global music industry, across artist development, rights, licensing, production and publishing.</p>
+      </div>
+      <div class="credential reveal">
+        <p class="credential-big">100+ Top 10s</p>
+        <p>From recording, licensing and publishing deals Matt was involved in, plus dozens of #1s in the UK and abroad.</p>
+      </div>
+      <div class="credential reveal">
+        <p class="credential-big">Primetime TV</p>
+        <p>Theme tunes for <em>Saturday Night Takeaway</em>, <em>The Big Reunion</em> and more, from Audiofreaks Music, the company Matt co-founded.</p>
+      </div>
     </div>
 
     <div class="about-grid">
@@ -366,18 +299,21 @@
       </div>
       <div class="about-body">
         <p class="about-lead reveal">Matt Meyers is an applied AI strategist, builder and creative technologist. Through Londons.ai, a London AI consultancy, he helps companies work out where AI can improve how they operate, create content, develop products and manage knowledge, then helps build it.</p>
-        <p class="reveal">He comes to AI as a music, media and technology entrepreneur with more than 30 years in the global music industry. Half English and half Finnish, Matt started at 17 and has built and advised businesses, artists and creative projects across artist development, rights, licensing, production, publishing and promotion.</p>
-        <p class="reveal">He has been personally involved in hundreds of recording, licensing and publishing agreements for artists, writers, producers and clients. Those deals led to releases on major and independent labels, more than 100 Top 10 chart successes, dozens of #1s in the UK and abroad, accumulated sales in the hundreds of millions and streams in the billions.</p>
         <p class="reveal">His AI work covers strategy, workflow automation, AI agents, knowledge systems and rapid product development, plus generative video, avatars, imagery, voice, music and AI-powered content production.</p>
-        <p class="reveal">Matt loves learning AI and dives deep into each new platform and release as it comes out. He works across ChatGPT, Claude, Gemini and NotebookLM, plus a wide range of automation and development platforms including n8n, Make, Notion, Vercel, Claude Code, Codex and Cowork, and reaches for whichever fits the problem. More than any single tool, what he cares about is getting them to work together: connecting models, automations and business tools into intelligent workflows that help businesses get more done.</p>
         <p class="reveal">His strength is combining creative thinking, commercial experience and technology. He keeps AI practical: finding where it can save time, improve output, bring in new revenue or make new ways of working possible. After a career around recording contracts, publishing, licensing and intellectual property, he is particularly interested in AI that makes commercial and rights sense.</p>
-        <p class="reveal">Matt co-founded the music and media company Audiofreaks Music, which works across music production, songwriting, publishing, management, licensing, TV music and marketing campaigns for brands.</p>
-        <p class="reveal">Audiofreaks Music has made the title music (theme tunes) for many primetime national TV series, including <em>Ant &amp; Dec's Saturday Night Takeaway</em> on ITV, <em>The Big Reunion</em> on ITV2, <em>Surprise Surprise</em> and <em>Meet the Parents with Holly Willoughby</em> on ITV1, <em>Peter Andre Show</em> on ITV2 and <em>Road to Ibiza</em> on E4. Matt was Music Director and music producer on <em>The Big Reunion</em>, which won at the National Reality TV Awards, and he and his team were also music producers on Netflix's <em>Dance 100</em>.</p>
-        <p class="reveal">As an award-winning producer working under several aliases, Matt has had hundreds of chart and club successes, and has produced or worked on projects involving Tiësto, Nicole Scherzinger, Chaka Khan, Alok, Afrojack, CeCe Peniston, Alesha Dixon, Wiz Khalifa, Keri Hilson, Snoop Dogg, Deborah Cox and many others. He also manages the London pop artist Allegra.</p>
-        <p class="reveal">In K-pop and J-pop, Audiofreaks Music has worked with TWICE, NCT DREAM, ITZY, IVE, MONSTA X, SUPER JUNIOR, SHINee, TAEMIN, OH MY GIRL, LOONA, YOUNHA, SixTONES, Kis-My-Ft2 and many more.</p>
-        <p class="reveal">Across writing, production and remixes, the Audiofreaks Music family has also worked with Mary J. Blige, John Newman, Tom Walker, Mark Morrison, Robin S, Crystal Waters, Martha Wash, Armand Van Helden, Lindsay Lohan, Judge Jules, Blue, Five, Atomic Kitten and Liberty X.</p>
-        <p class="reveal">Matt and his business partners created <a href="https://www.hitvocals.co.uk/" target="_blank" rel="noopener">HitVocals</a>, the home of human vocals: an online marketplace where DJs, producers and labels license exclusive acapellas, toplines and hit songs from professional songwriters and vocalists. Discovery, licensing, messaging, rights management and artist payments all happen in one place. They built it with a combination of AI, the no-code platform Bubble, Amazon Web Services and other technologies, and it has become the leading online vocal marketplace in the music industry.</p>
-        <p class="reveal">His co-founders include music manager Chris Herbert, whose career includes creating the Spice Girls and later working with Simon Cowell on acts including Five.</p>
+        <details class="about-more reveal">
+          <summary>Full background and credits</summary>
+          <p>He comes to AI as a music, media and technology entrepreneur with more than 30 years in the global music industry. Half English and half Finnish, Matt started at 17 and has built and advised businesses, artists and creative projects across artist development, rights, licensing, production, publishing and promotion.</p>
+          <p>He has been personally involved in hundreds of recording, licensing and publishing agreements for artists, writers, producers and clients. Those deals led to releases on major and independent labels, more than 100 Top 10 chart successes, dozens of #1s in the UK and abroad, accumulated sales in the hundreds of millions and streams in the billions.</p>
+          <p>Matt loves learning AI and dives deep into each new platform and release as it comes out. He works across ChatGPT, Claude, Gemini and NotebookLM, plus a wide range of automation and development platforms including n8n, Make, Notion, Vercel, Claude Code, Codex and Cowork, and reaches for whichever fits the problem. More than any single tool, what he cares about is getting them to work together: connecting models, automations and business tools into intelligent workflows that help businesses get more done.</p>
+          <p>Matt co-founded the music and media company Audiofreaks Music, which works across music production, songwriting, publishing, management, licensing, TV music and marketing campaigns for brands.</p>
+          <p>Audiofreaks Music has made the title music (theme tunes) for many primetime national TV series, including <em>Ant &amp; Dec's Saturday Night Takeaway</em> on ITV, <em>The Big Reunion</em> on ITV2, <em>Surprise Surprise</em> and <em>Meet the Parents with Holly Willoughby</em> on ITV1, <em>Peter Andre Show</em> on ITV2 and <em>Road to Ibiza</em> on E4. Matt was Music Director and music producer on <em>The Big Reunion</em>, which won at the National Reality TV Awards, and he and his team were also music producers on Netflix's <em>Dance 100</em>.</p>
+          <p>As an award-winning producer working under several aliases, Matt has had hundreds of chart and club successes, and has produced or worked on projects involving Tiësto, Nicole Scherzinger, Chaka Khan, Alok, Afrojack, CeCe Peniston, Alesha Dixon, Wiz Khalifa, Keri Hilson, Snoop Dogg, Deborah Cox and many others. He also manages the London pop artist Allegra.</p>
+          <p>In K-pop and J-pop, Audiofreaks Music has worked with TWICE, NCT DREAM, ITZY, IVE, MONSTA X, SUPER JUNIOR, SHINee, TAEMIN, OH MY GIRL, LOONA, YOUNHA, SixTONES, Kis-My-Ft2 and many more.</p>
+          <p>Across writing, production and remixes, the Audiofreaks Music family has also worked with Mary J. Blige, John Newman, Tom Walker, Mark Morrison, Robin S, Crystal Waters, Martha Wash, Armand Van Helden, Lindsay Lohan, Judge Jules, Blue, Five, Atomic Kitten and Liberty X.</p>
+          <p>Matt and his business partners created <a href="https://www.hitvocals.co.uk/" target="_blank" rel="noopener">HitVocals</a>, the home of human vocals: an online marketplace where DJs, producers and labels license exclusive acapellas, toplines and hit songs from professional songwriters and vocalists. Discovery, licensing, messaging, rights management and artist payments all happen in one place. They built it with a combination of AI, the no-code platform Bubble, Amazon Web Services and other technologies, and it has become the leading online vocal marketplace in the music industry.</p>
+          <p>His co-founders include music manager Chris Herbert, whose career includes creating the Spice Girls and later working with Simon Cowell on acts including Five.</p>
+        </details>
         <blockquote class="about-quote reveal">
           <p>What can we do now that we couldn't realistically do before?</p>
           <cite>Matt Meyers</cite>
@@ -511,6 +447,6 @@
 </main>
 
 <script src="vendor/lenis.min.js"></script>
-<script src="main.js?v=202611091129"></script>
+<script src="main.js?v=202611091312"></script>
 </body>
 </html>

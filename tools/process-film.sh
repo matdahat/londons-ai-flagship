@@ -65,5 +65,17 @@ for i in $(seq 1 $N); do
     -movflags +faststart -an "clip-$i-loop.mp4"
 done
 
+# 5 — the phone opening: a portrait crop of clip 1 from the 4K grade. The crop
+#     pans left with the camera so Tower Bridge stays in frame the whole way.
+#     864x1536 at crf 28 is ~2.7 MB, about what the old 720p landscape loop
+#     weighed, at roughly twice the sharpness on a phone.
+D1=$(ffprobe -v error -show_entries format=duration -of csv=p=0 graded-1.mp4)
+ffmpeg -y -v error -i graded-1.mp4 \
+  -vf "crop=w=1215:h=2160:x='(0.15-0.15*t/${D1})*in_w':y=0,scale=864:1536:flags=lanczos" \
+  -c:v libx264 -preset slow -crf 28 -pix_fmt yuv420p -profile:v high \
+  -movflags +faststart -an hero-portrait-loop.mp4
+ffmpeg -y -v error -i hero-portrait-loop.mp4 -frames:v 1 \
+  -vf "scale=540:960:flags=lanczos" -q:v 5 hero-portrait-poster.jpg
+
 echo "frames: $COUNT @ ${FPS}fps"
-du -sh "$FRAMES" descent.mp4 clip-*-loop.mp4
+du -sh "$FRAMES" descent.mp4 clip-*-loop.mp4 hero-portrait-loop.mp4

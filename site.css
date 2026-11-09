@@ -108,8 +108,10 @@ body { overflow-x: hidden; }
    was painting straight over the feature text and greying it, which is why
    the copy measured as full-strength white but never looked it. */
 #descent { position: relative; z-index: 2; }
-/* 990vh = 130+130+145+130 (clips 1-4) + 170 (THE WARNING pause) + 145+140 (clips 5-6) — see main.js SEG_VH */
-.descent-track { height: 990vh; position: relative; }
+/* 520vh, the six clips sharing the scroll evenly; must match TOTAL in main.js.
+   It was 990vh with a 170vh pause for THE WARNING, about ten screens before the
+   first fact, so in Nov 2026 it was halved and the warning cut. */
+.descent-track { height: 520vh; position: relative; }
 
 /* fixed flush-left zone label */
 .zone-label {
@@ -122,11 +124,6 @@ body { overflow-x: hidden; }
   pointer-events: none;
 }
 .zone-label.live { opacity: 1; }
-/* THE WARNING puts a light panel behind the label, where reversed white type
-   and its ink halo both disappear. Flip to ink for that beat, same as the nav
-   already does. */
-.zone-label.on-light { color: var(--color-text); text-shadow: none; }
-.zone-label.on-light .zl-index { color: color-mix(in srgb, var(--color-text) 55%, transparent); }
 .zone-label .zl-rule { width: 34px; height: 2px; background: var(--color-accent); align-self: center; }
 .zone-label .zl-index { color: var(--ground-70); }
 
@@ -190,6 +187,8 @@ body { overflow-x: hidden; }
   text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px;
 }
 .skip-film:hover { color: var(--color-bg); text-decoration-thickness: 2px; }
+/* the film is itself proof of the creative AI work, so say so where it plays */
+.film-credit { margin: var(--space-4) 0 0; font-size: 13px; line-height: 1.4; color: var(--color-bg); }
 
 /* legibility scrim behind pinned lines — ink, never a colour */
 .film-scrim {
@@ -229,6 +228,7 @@ body { overflow-x: hidden; }
 .zone-copy .zc-sub,
 .zone-copy .scroll-cue,
 .zone-copy .skip-film,
+.zone-copy .film-credit,
 .zone-copy .hero-lockup .word,
 .zone-label {
   text-shadow: 0 1px 14px color-mix(in srgb, var(--color-text) 38%, transparent);
@@ -238,121 +238,17 @@ body { overflow-x: hidden; }
 }
 .film-scrim.live { opacity: 1; }
 
-/* THE WARNING — the one light-ground pause inside the descent. Occludes the
-   held film frame without cutting it: frame progress freezes on clip 4's
-   last frame for the duration of this beat, then resumes into clip 5. */
-.zone-warning {
-  position: fixed; inset: 0; z-index: 25;
-  display: flex; align-items: center;
-  padding: 0 var(--gutter);
-  background: var(--color-bg); color: var(--color-text);
-  opacity: 0; visibility: hidden; pointer-events: none;
-}
-.zone-warning-inner { max-width: 62ch; }
-.zone-warning .eyebrow { margin-bottom: var(--space-6); }
-.zone-warning h2 { max-width: 16ch; margin: 0 0 var(--space-6); }
-.zone-warning p {
-  font-size: 17px; line-height: 1.6; max-width: 52ch;
-  color: color-mix(in srgb, var(--color-text) 78%, transparent);
-  margin: 0 0 var(--space-4);
-}
-.zone-warning .zw-line {
-  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
-  font-size: clamp(19px, 2vw, 24px); letter-spacing: -0.015em;
-  margin-top: var(--space-6); max-width: 30ch;
-}
-
-/* THE WARNING holds for 170vh with the copy pinned and the film frozen. The
-   global rail is the only moving thing and it creeps ~17% of its length across
-   the whole beat, so the panel reads as a stuck page. --wp is this beat's own
-   0-1 progress (set per frame in main.js) and drives two cues: a hairline field
-   drifting up the empty half of the panel, and a right-edge ruler travelling
-   past a fixed playhead with a fill that shows how much of the pause is left. */
-.zone-warning { --wp: 0; }
-
-.zone-warning::before {
-  content: ''; position: absolute; left: 0; right: 0; top: -80vh; bottom: -80vh;
-  background: repeating-linear-gradient(to bottom,
-    color-mix(in srgb, var(--color-text) 9%, transparent) 0 1px,
-    transparent 1px 88px);
-  /* kept off the copy column — hairlines behind body text read as ruled paper */
-  -webkit-mask-image: linear-gradient(to right, transparent 52%, #000 78%);
-  mask-image: linear-gradient(to right, transparent 52%, #000 78%);
-  transform: translate3d(0, calc(var(--wp) * -704px), 0);
-  pointer-events: none;
-}
-
-.zw-gauge {
-  position: absolute; right: var(--gutter); top: 24vh; bottom: 16vh;
-  width: 64px; pointer-events: none;
-}
-.zw-gauge-ticks {
-  position: absolute; inset: -60% 0;
-  background-image:
-    repeating-linear-gradient(to bottom, color-mix(in srgb, var(--color-text) 26%, transparent) 0 1px, transparent 1px 110px),
-    repeating-linear-gradient(to bottom, color-mix(in srgb, var(--color-text) 13%, transparent) 0 1px, transparent 1px 22px);
-  background-size: 100% 100%, 42% 100%;
-  background-position: right top, right top;
-  background-repeat: repeat-y;
-  transform: translate3d(0, calc(var(--wp) * -660px), 0);
-}
-/* the fixed playhead the ruler runs past */
-.zw-gauge::after {
-  content: ''; position: absolute; left: -12px; right: 0; top: 50%;
-  height: 2px; margin-top: -1px; background: var(--color-accent);
-}
-.zw-gauge-track {
-  position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
-  background: color-mix(in srgb, var(--color-text) 15%, transparent);
-}
-.zw-gauge-fill {
-  position: absolute; inset: 0; background: var(--color-accent);
-  transform: scaleY(var(--wp)); transform-origin: top;
-}
-
-/* ————————————————————— the descent (mobile story chapters) —————————————————————
-   No scroll-scrub on touch — tried it, it doesn't feel right on a phone. Instead:
-   six full-bleed video chapters that snap crisply into place one at a time, each
-   with its own pinned bottom-scrim copy, same visual language as the desktop hero
-   (film behind, text pinned over a dark gradient) just delivered per-chapter
-   instead of continuously scrubbed. */
-
-/* proximity, never mandatory: mandatory snap traps the scroll at the end of
-   the last chapter, so everything after the film — services, beyond fashion,
-   the proof numbers, the poster close and the footer — becomes unreachable on
-   a phone. proximity still snaps each chapter cleanly when you're near one,
-   but always lets you scroll on through to the bottom of the page. */
-html.film-loops { scroll-snap-type: y proximity; }
+/* ————————————————————— the descent (phones) —————————————————————
+   No scroll-scrub on touch: tried it, and it doesn't feel right on a phone.
+   Phones used to get seven full-screen chapters that snapped one per swipe;
+   since Nov 2026 they get the opening clip, then the shoot and floor lines as
+   type, so the services are one screen away. */
 .descent-mobile { display: none; }
-
-/* chapter rail — the desktop descent has .descent-progress, which film-loops
-   mode hides, so the seven mobile chapters gave no read on how far in you were
-   or how many were left. One pip per chapter, filled as each is reached. Lives
-   inside .descent-mobile so it inherits that container's desktop hiding. */
-.m-progress {
-  position: fixed; right: 8px; top: 50%; transform: translateY(-50%);
-  z-index: 30; display: flex; flex-direction: column; gap: 6px;
-  pointer-events: none; opacity: 0; transition: opacity 0.4s;
-}
-.m-progress.live { opacity: 1; }
-.m-progress span {
-  display: block; width: 2px; height: 18px;
-  background: color-mix(in srgb, var(--color-bg) 30%, transparent);
-  transition: background 0.3s;
-}
-.m-progress span.done { background: color-mix(in srgb, var(--color-accent) 55%, transparent); }
-.m-progress span.now { background: var(--color-accent); }
-/* THE WARNING is the one light-ground chapter, where reversed pips vanish —
-   same flip the nav already does for that beat */
-.m-progress.on-light span { background: color-mix(in srgb, var(--color-text) 20%, transparent); }
-.m-progress.on-light span.done { background: color-mix(in srgb, var(--color-accent) 55%, transparent); }
-.m-progress.on-light span.now { background: var(--color-accent); }
 .descent-mobile .m-zone {
   position: relative;
   height: 100vh; height: 100svh; /* svh accounts for mobile browser chrome, vh is the fallback */
   overflow: hidden;
   background: var(--color-text);
-  scroll-snap-align: start; scroll-snap-stop: always;
 }
 .descent-mobile video {
   position: absolute; inset: 0; z-index: 0;
@@ -379,18 +275,11 @@ html.film-loops { scroll-snap-type: y proximity; }
 .descent-mobile .m-copy .display-2,
 .descent-mobile .m-copy .display-1,
 .descent-mobile .m-copy .zc-sub,
-.descent-mobile .m-kicker,
+.descent-mobile .m-copy .film-credit,
 .descent-mobile .m-copy .skip-film,
 .descent-mobile .m-copy .hero-lockup .word {
   text-shadow: 0 1px 14px color-mix(in srgb, var(--color-text) 38%, transparent);
 }
-.descent-mobile .m-kicker {
-  display: flex; align-items: center; gap: var(--space-3);
-  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
-  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--ground-70); margin-bottom: var(--space-4);
-}
-.descent-mobile .m-kicker .zl-rule { width: 28px; height: 2px; background: var(--color-accent); }
 .descent-mobile .m-copy .zc-sub { margin-top: var(--space-3); color: var(--ground-70); font-size: 15px; }
 .descent-mobile .m-zone--hero .m-copy {
   top: 0; bottom: auto; display: flex; flex-direction: column; justify-content: flex-end;
@@ -418,25 +307,19 @@ html.film-loops { scroll-snap-type: y proximity; }
     transparent 64%,
     color-mix(in srgb, var(--color-text) 55%, transparent) 100%);
 }
-/* THE WARNING, mobile — its own full-height light-ground chapter, same snap rhythm */
-.descent-mobile .m-warning {
-  position: relative;
-  min-height: 100vh; min-height: 100svh;
-  display: flex; flex-direction: column; justify-content: center;
-  background: var(--color-bg); color: var(--color-text);
-  padding: calc(var(--space-8) * 1.5) var(--gutter);
-  scroll-snap-align: start; scroll-snap-stop: always;
+/* the shoot and floor lines after the opening clip: the desktop film's
+   zones 3 and 4 as type on the film's own dark ground */
+.descent-mobile .m-floor {
+  background: var(--color-text); color: var(--color-bg);
+  padding: calc(var(--space-8) * 1.5) var(--gutter) calc(var(--space-8) * 2);
 }
-.descent-mobile .m-warning h2 { font-size: clamp(28px, 8vw, 40px); max-width: 14ch; margin: 0 0 var(--space-4); }
-.descent-mobile .m-warning p { font-size: 15px; line-height: 1.6; max-width: 44ch; margin: 0 0 var(--space-3); color: color-mix(in srgb, var(--color-text) 78%, transparent); }
-.descent-mobile .m-warning .zw-line {
-  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
-  font-size: clamp(18px, 5vw, 22px); margin-top: var(--space-4);
+.descent-mobile .m-floor-setup {
+  margin: 0 0 var(--space-6); max-width: 32ch;
+  font-size: 17px; line-height: 1.5; color: var(--ground-70);
 }
-/* No gauge on the mobile warning: it is a snap chapter, so it always comes to
-   rest at the same offset and the fill would freeze at 53% — a stuck progress
-   bar. The dead-scroll it answers on desktop is an artefact of the 170vh pin,
-   which mobile does not have. */
+.descent-mobile .m-floor .display-2 {
+  margin: 0; max-width: 18ch; font-size: clamp(26px, 7.4vw, 40px); text-wrap: balance;
+}
 
 /* nav brand steps aside while the display lockup is on screen */
 .site-nav .brand-lockup { transition: opacity 0.3s; }
@@ -506,61 +389,26 @@ html.film-loops { scroll-snap-type: y proximity; }
 /* BEYOND FASHION */
 .beyond .beyond-row {
   display: grid; grid-template-columns: minmax(200px, 4fr) 8fr;
-  gap: var(--space-6); padding: var(--space-5) 0;
+  gap: var(--space-6); padding: calc(var(--space-4) + var(--space-1)) 0; /* 20px: there is no --space-5 */
   border-top: 2px solid var(--color-divider); align-items: baseline;
 }
 .beyond-row h3 {
   font-size: clamp(24px, 3vw, 40px); letter-spacing: -0.02em; margin: 0;
 }
 .beyond-row p { margin: 0; font-size: 15px; }
-.beyond-coda {
-  padding-top: var(--space-8); font-family: var(--font-heading); font-weight: var(--font-heading-weight);
-  font-size: clamp(19px, 2vw, 25px); letter-spacing: -0.015em; max-width: 34ch;
-}
-
-/* PROOF */
-.proof .counter-strip { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 2px solid var(--color-divider); }
-.counter { padding: var(--space-6) var(--space-4) var(--space-8) 0; border-left: 2px solid var(--color-divider); padding-left: var(--space-4); }
-.counter:first-child { border-left: 0; padding-left: 0; }
-.counter .num {
-  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
-  font-size: clamp(44px, 5.6vw, 88px); line-height: 1; letter-spacing: -0.02em;
-  display: block; margin-bottom: var(--space-3);
-}
-.counter .num .accent { color: var(--color-accent); }
-.counter .what { font-size: 14px; margin: 0 0 var(--space-2); }
-.counter .who {
-  font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
-  color: color-mix(in srgb, var(--color-text) 55%, transparent); margin: 0;
-}
-.proof-attribution {
-  margin-top: var(--space-6); font-size: 11px;
-  color: color-mix(in srgb, var(--color-text) 55%, transparent); max-width: 62ch;
-}
-
-/* COMMERCIAL JUDGEMENT */
-.judgement .judgement-grid {
+/* CREDENTIALS: Matt's own track record, first thing in About. It replaced
+   "The numbers", which showed other companies' results. Rows like the sector
+   list rather than a strip of big stat tiles. */
+.credentials { margin: 0 0 calc(var(--space-8) * 1.5); }
+.credential {
   display: grid; grid-template-columns: minmax(200px, 4fr) 8fr;
-  gap: var(--space-6) var(--space-8); align-items: start;
+  gap: var(--space-6); padding: calc(var(--space-4) + var(--space-1)) 0; /* 20px: there is no --space-5 */
+  border-top: 2px solid var(--color-divider); align-items: baseline;
 }
-.judgement h2 { max-width: 12ch; }
-.judgement-body > p:first-child {
-  margin: 0 0 var(--space-4); font-size: 15px;
-  color: color-mix(in srgb, var(--color-text) 78%, transparent);
-}
-.judgement-list {
-  list-style: none; margin: 0; padding: 0;
-  display: grid; grid-template-columns: repeat(2, 1fr); column-gap: var(--space-6);
-}
-.judgement-list li {
-  padding: var(--space-3) 0; border-top: 2px solid var(--color-divider);
+.credential p { margin: 0; font-size: 15px; line-height: 1.55; max-width: 62ch; }
+.credential .credential-big {
   font-family: var(--font-heading); font-weight: var(--font-heading-weight);
-  font-size: clamp(18px, 1.8vw, 24px); letter-spacing: -0.015em;
-}
-.judgement-line {
-  margin: var(--space-8) 0 0; max-width: 34ch;
-  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
-  font-size: clamp(19px, 2vw, 25px); letter-spacing: -0.015em;
+  font-size: clamp(24px, 3vw, 40px); letter-spacing: -0.02em; line-height: 1.1;
 }
 
 /* ABOUT: Matt's bio, written for Londons.ai: AI first, music career as the proof */
@@ -575,7 +423,7 @@ html.film-loops { scroll-snap-type: y proximity; }
 }
 .about-id p { margin: 0; font-size: 14px; line-height: 1.5; max-width: 26ch; color: color-mix(in srgb, var(--color-text) 78%, transparent); }
 .about-body p {
-  margin: 0 0 var(--space-4); font-size: 15px; line-height: 1.6;
+  margin: 0 0 var(--space-4); font-size: 15px; line-height: 1.6; max-width: 68ch;
   color: color-mix(in srgb, var(--color-text) 78%, transparent);
 }
 .about-body .about-lead {
@@ -596,6 +444,18 @@ html.film-loops { scroll-snap-type: y proximity; }
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 .about-body .btn { margin-top: var(--space-6); }
+/* the long credit lists, one tap away rather than a 680-word wall */
+.about-more { margin: var(--space-6) 0 0; border-top: 2px solid var(--color-divider); }
+.about-more summary {
+  display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px;
+  cursor: pointer; list-style: none;
+  font-family: var(--font-heading); font-weight: 600; font-size: 15px; color: var(--color-text);
+}
+.about-more summary::-webkit-details-marker { display: none; }
+.about-more summary::after { content: '+'; font-size: 20px; line-height: 1; color: var(--color-accent-700); }
+.about-more[open] summary::after { content: '\2212'; }
+.about-more summary:hover { text-decoration: underline; text-underline-offset: 4px; }
+.about-more[open] summary { margin-bottom: var(--space-3); }
 
 /* HOW WE WORK: the six questions we start from, then audit / build / embed */
 .questions {
@@ -733,18 +593,16 @@ html.film-loops { scroll-snap-type: y proximity; }
 .reveal.in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
-  /* drop the scroll-linked drift; the gauge fill still shows the beat's progress */
-  .zone-warning::before, .zw-gauge-ticks { transform: none; }
 }
 
 /* ——————————————————————————— mobile ——————————————————————————— */
 
 @media (max-width: 900px) {
-  .cells--6, .cells--3, .proof .counter-strip { grid-template-columns: 1fr; }
-  .cell, .counter { border-left: 0; padding-left: 0; border-top: 2px solid var(--color-divider); padding-bottom: var(--space-8); }
-  .cell:first-child, .counter:first-child { border-top: 0; }
-  .beyond .beyond-row { grid-template-columns: 1fr; gap: var(--space-2); }
-  .group-head, .judgement .judgement-grid, .about-grid { grid-template-columns: 1fr; gap: var(--space-3); }
+  .cells--6, .cells--3 { grid-template-columns: 1fr; }
+  .cell { border-left: 0; padding-left: 0; border-top: 2px solid var(--color-divider); padding-bottom: var(--space-8); }
+  .cell:first-child { border-top: 0; }
+  .beyond .beyond-row, .credential { grid-template-columns: 1fr; gap: var(--space-2); }
+  .group-head, .about-grid { grid-template-columns: 1fr; gap: var(--space-3); }
   .questions { grid-template-columns: repeat(2, 1fr); }
   .question, .question:nth-child(3n+1) { border-left: 2px solid var(--color-divider); padding-left: var(--space-4); border-top: 0; }
   .question:nth-child(odd) { border-left: 0; padding-left: 0; }
@@ -775,8 +633,7 @@ html.film-loops { scroll-snap-type: y proximity; }
   }
   .site-nav .brand-lockup + .nav-link { margin-left: calc(var(--space-2) * -1); }
   /* the two-row nav is 98px, so a menu or "Talk to us" jump would tuck the
-     heading under it; offset the anchored sections only (not the film's snap
-     chapters, which a scroll-padding on html would also shift) */
+     heading under it; offset the anchored sections only */
   main section[id]:not(#descent) { scroll-margin-top: calc(var(--space-8) * 1.5); }
 }
 
@@ -789,17 +646,16 @@ html.film-loops { scroll-snap-type: y proximity; }
 
 /* phones: two columns of 30px questions or labels would wrap badly, so go to one */
 @media (max-width: 560px) {
-  .questions, .judgement-list { grid-template-columns: 1fr; }
+  .questions { grid-template-columns: 1fr; }
   .question, .question:nth-child(3n+1), .question:nth-child(odd) { border-left: 0; padding-left: 0; }
   .question:nth-child(n+2) { border-top: 2px solid var(--color-divider); }
 }
 
-/* mobile / coarse-pointer film mode: stacked autoplay loops, no scrub */
+/* mobile / coarse-pointer film mode: the opening loop and type, no scrub */
 html.film-loops .film-canvas,
 html.film-loops .descent-track,
 html.film-loops .zone-label,
 html.film-loops .descent-progress,
 html.film-loops .film-scrim,
-html.film-loops .zone-copy,
-html.film-loops .zone-warning { display: none; }
+html.film-loops .zone-copy { display: none; }
 html.film-loops .descent-mobile { display: block; }
