@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Londons.ai | Making AI work for London businesses</title>
 <meta name="description" content="London AI consultancy. We work out what AI can do for your business, then build it: strategy, automation, company knowledge, AI products, video and content.">
-<meta name="build-stamp" content="202611091312">
+<meta name="build-stamp" content="202611091649">
 <link rel="icon" type="image/svg+xml" href="assets/logo-mark.svg">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="vendor/lenis.css">
-<link rel="stylesheet" href="site.css?v=202611091312">
+<link rel="stylesheet" href="site.css?v=202611091649">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -108,11 +108,14 @@
     <h1 class="display-1">Making AI work for London businesses.</h1>
     <div class="hero-actions">
       <a class="btn btn-cta btn-cta--on-film" href="#contact">Talk to us</a>
-      <a class="skip-film" href="#services">Skip the film</a>
     </div>
     <p class="film-credit">This film was made with AI.</p>
     <p class="scroll-cue"><span class="cue-rule"></span>Scroll to descend</p>
   </div>
+
+  <!-- pinned bottom-centre for the whole film (desktop); main.js hides it
+       once the page content arrives -->
+  <a class="skip-film skip-film--pinned live" id="skip-film" href="#services">Skip the film <span aria-hidden="true">&darr;</span></a>
 
   <div class="zone-copy" id="copy-z2">
     <p class="display-2">Automation, AI agents and company knowledge, built around the systems you already use.</p>
@@ -447,6 +450,6 @@
 </main>
 
 <script src="vendor/lenis.min.js"></script>
-<script src="main.js?v=202611091312"></script>
+<script src="main.js?v=202611091649"></script>
 </body>
 </html>

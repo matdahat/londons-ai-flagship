@@ -81,6 +81,7 @@
   var zoneName = document.getElementById('zone-name');
   var nav = document.getElementById('site-nav');
   var mainContent = document.getElementById('main-content');
+  var skipFilm = document.getElementById('skip-film');
 
   var ZONES = [
     { index: '01', name: 'The City' },
@@ -329,6 +330,9 @@
     /* nav ground state: the light style once the page content reaches it */
     var mcTop = mainContent.getBoundingClientRect().top;
     nav.classList.toggle('on-ground', mcTop <= nav.offsetHeight);
+    /* Skip the film stays up until the film stops, i.e. until the page
+       content starts coming up over the last frame */
+    if (skipFilm) skipFilm.classList.toggle('live', mcTop > viewportH - 1);
 
     window.__descent = { p: p, frame: currentFrame, zone: lastZone, live: live };
   }

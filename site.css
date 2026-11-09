@@ -187,6 +187,23 @@ body { overflow-x: hidden; }
   text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px;
 }
 .skip-film:hover { color: var(--color-bg); text-decoration-thickness: 2px; }
+/* desktop: Skip the film is pinned bottom-centre for the whole descent, so it
+   is one click away at every point of the film, not only on the first screen.
+   An ink pill rather than underlined text, so it reads as a control over any
+   frame (white on 66% ink is 5:1 even over the white studio backdrop).
+   main.js drops .live once the page content reaches the screen. */
+.skip-film--pinned {
+  position: fixed; left: 50%; bottom: var(--space-8); z-index: 30;
+  transform: translateX(-50%);
+  gap: var(--space-2); padding: 0 var(--space-4);
+  font-size: 14px; text-decoration: none;
+  background: color-mix(in srgb, var(--color-text) 66%, transparent);
+  border: 1px solid var(--ground-40);
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity 0.3s, visibility 0.3s, background 0.2s;
+}
+.skip-film--pinned.live { opacity: 1; visibility: visible; pointer-events: auto; }
+.skip-film--pinned:hover { background: var(--color-text); text-decoration: none; }
 /* the film is itself proof of the creative AI work, so say so where it plays */
 .film-credit { margin: var(--space-4) 0 0; font-size: 13px; line-height: 1.4; color: var(--color-bg); }
 
@@ -657,5 +674,6 @@ html.film-loops .descent-track,
 html.film-loops .zone-label,
 html.film-loops .descent-progress,
 html.film-loops .film-scrim,
-html.film-loops .zone-copy { display: none; }
+html.film-loops .zone-copy,
+html.film-loops .skip-film--pinned { display: none; }
 html.film-loops .descent-mobile { display: block; }
